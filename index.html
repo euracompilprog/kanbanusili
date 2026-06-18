@@ -8,8 +8,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root { font-family: 'Segoe UI', Roboto, sans-serif; }
-    body { margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; background-color: #f8fafc; color: #333; }
-    .sidebar { width: 260px; background: #ffffff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; padding: 20px; justify-content: space-between; }
+    body { margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; background-color: #f0f4f8; color: #333; }
+    
+    /* Chap taraf menyu */
+    .sidebar { width: 260px; background: #ffffff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; padding: 20px; justify-content: space-between; flex-shrink: 0; }
     .brand-section { text-align: center; padding-bottom: 25px; border-bottom: 2px dashed #e2e8f0; }
     .brand-logo { font-size: 22px; font-weight: 800; color: #007bb5; margin: 0; }
     .brand-sub { font-size: 11px; color: #718096; letter-spacing: 2px; margin-top: 3px; }
@@ -18,42 +20,61 @@
     .menu-item i { margin-right: 12px; width: 20px; font-size: 16px; }
     .menu-item.active { background: #e6f4ea; color: #1e7e34; font-weight: 600; }
     .menu-item:hover:not(.active) { background: #f7fafc; }
-    .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
-    .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    
+    /* Asosiy ishchi oyna */
+    .main-content { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .content-header { padding: 20px 30px 10px 30px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e2e8f0; }
     .content-title { font-size: 22px; font-weight: 700; color: #1a202c; margin: 0; }
-    .tab-content { display: none; }
+    
+    .tab-content { display: none; height: calc(100vh - 80px); overflow-y: auto; padding: 25px 30px; box-sizing: border-box; }
     .tab-content.active { display: block; }
-    .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-    .ui-card { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #edf2f7; margin-bottom: 20px; }
-    .card-title-text { font-size: 16px; font-weight: 700; color: #2d3748; margin: 0 0 20px 0; display: flex; align-items: center; }
+    
+    /* Yuqori boshqaruv formalari */
+    .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+    .ui-card { background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #edf2f7; }
+    .card-title-text { font-size: 15px; font-weight: 700; color: #2d3748; margin: 0 0 15px 0; display: flex; align-items: center; }
     .card-title-text i { margin-right: 10px; color: #4299e1; }
     
-    /* Sub-tab navigatsiyasi */
+    .form-control { margin-bottom: 12px; }
+    .form-control label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #4a5568; }
+    .form-control input, .form-control select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 13px; }
+    .btn-action { width: 100%; padding: 11px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; color: white; }
+    .result-box { margin-top: 12px; padding: 10px; background: #edf2f7; border-radius: 6px; font-weight: 600; font-size: 13px; }
+
+    /* SUBS-TABS (Sklad va Ta'minot uchun) */
     .sub-tab-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
     .sub-btn { padding: 8px 16px; border: 1px solid #cbd5e0; background: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
     .sub-btn.active { background: #3182ce; color: white; border-color: #3182ce; }
-
-    /* KANBAN DOSKASI DIZAYNI */
-    .kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 25px; }
-    .kanban-column { background: #ebedf0; border-radius: 12px; padding: 15px; min-height: 200px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-    .column-header { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 2px solid #cbd5e0; }
-    .column-count { background: #cbd5e0; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
-    .kanban-card { background: #ffffff; border-radius: 8px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid #3182ce; }
-    .kanban-card-title { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
-    .kanban-card-info { font-size: 12px; color: #718096; }
-
-    /* Sklad va Ta'minot elementlari */
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
     .product-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; }
     .product-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-    .form-control { margin-bottom: 15px; }
-    .form-control label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; }
-    .form-control input, .form-control select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; }
-    .btn-action { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; background: #3182ce; color: white; }
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
     th { background: #f7fafc; color: #4a5568; }
-    .result-box { margin-top: 15px; padding: 12px; background: #edf2f7; border-radius: 8px; font-weight: 600; }
+
+    /* 🚀 PREMIUM YOUGILE USLUBIDAGI VERTIKAL KANBAN DOSKASI */
+    .kanban-section { background: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    .kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; margin-top: 10px; }
+    
+    .kanban-column { background: #eef2f5; border-radius: 14px; padding: 15px; display: flex; flex-direction: column; max-height: 500px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    
+    /* Column ranglari xuddi rasmdagidek */
+    #col-reaktor { border-top: 4px solid #3182ce; }
+    #col-quyish { border-top: 4px solid #dd6b20; }
+    #col-sklad { border-top: 4px solid #2f855a; }
+
+    .column-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; color: #2d3748; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .column-count { background: #cbd5e0; color: #4a5568; padding: 2px 10px; border-radius: 20px; font-size: 11px; }
+    
+    /* Ichkarida cheksiz ma'lumot sig'adigan va skroll bo'ladigan joy */
+    .column-cards { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px; }
+    
+    /* Chiroyli va ixcham YouGile kartochkalari */
+    .kanban-card { background: #ffffff; border-radius: 10px; padding: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; transition: transform 0.2s; }
+    .kanban-card:hover { transform: translateY(-2px); }
+    .kanban-card-title { font-weight: 700; font-size: 13px; color: #1a202c; margin-bottom: 6px; }
+    .kanban-card-info { font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+    .kanban-card-info i { color: #a0aec0; }
   </style>
 </head>
 <body>
@@ -81,14 +102,14 @@
       <div class="ui-card"><h3><i class="fa-solid fa-wallet"></i> Kassa va Moliyaviy Hisobotlar</h3><p>Moliya va kassa oqimi paneli.</p></div>
     </div>
 
-    <!-- 2. MIKSER TAB + KANBAN DOSKASI JOYLASHDI -->
+    <!-- 2. MIKSER TAB + PROFESSIONAL KANBAN -->
     <div id="tab-mikser" class="tab-content active">
       <div class="grid-container">
         <div class="ui-card">
           <h3 class="card-title-text"><i class="fa-solid fa-gears"></i> Mikser Reaktorini To'ldirish</h3>
           <div class="form-control"><label>Brend nomi</label><input type="text" id="mikserSeryo" value="Aktiv Pena"></div>
           <div class="form-control"><label>Talab miqdori (Kg)</label><input type="number" id="mikserKg" placeholder="Masalan: 150"></div>
-          <button class="btn btn-action" style="background:#dd6b20;" onclick="addToKanban('reaktor')">Mikserni Yoqish</button>
+          <button class="btn btn-action" style="background:#dd6b20;" onclick="addToKanban()">Mikserni Yoqish</button>
           <button class="btn btn-action" style="background:#3182ce; margin-top:10px;" onclick="cancelActiveBatch()">Reaktor Blokini Cancel qilish</button>
         </div>
         <div class="ui-card">
@@ -102,19 +123,22 @@
         </div>
       </div>
 
-      <!-- ASOSIY KANBAN TIZIMI -->
-      <div class="kanban-board">
-        <div class="kanban-column" id="col-reaktor">
-          <div class="column-header"><span>1. Reaktor Ichida (Mikser)</span><span class="column-count" id="count-reaktor">0</span></div>
-          <div class="column-cards" id="cards-reaktor"></div>
-        </div>
-        <div class="kanban-column" id="col-quyish">
-          <div class="column-header"><span>2. Quyish Liniyasi</span><span class="column-count" id="count-quyish">0</span></div>
-          <div class="column-cards" id="cards-quyish"></div>
-        </div>
-        <div class="kanban-column" id="col-sklad">
-          <div class="column-header"><span>3. Skladga Urildi</span><span class="column-count" id="count-sklad">0</span></div>
-          <div class="column-cards" id="cards-sklad"></div>
+      <!-- YOUGILE USLUBIDAGI VERTIKAL KANBAN DOSKASI -->
+      <div class="ui-card kanban-section">
+        <h3 class="card-title-text" style="margin-bottom:10px;"><i class="fa-solid fa-align-left"></i> Ishlab Chiqarish Kanban Oqimi</h3>
+        <div class="kanban-board">
+          <div class="kanban-column" id="col-reaktor">
+            <div class="column-header"><span>1. Reaktor Ichida</span><span class="column-count" id="count-reaktor">0</span></div>
+            <div class="column-cards" id="cards-reaktor"></div>
+          </div>
+          <div class="kanban-column" id="col-quyish">
+            <div class="column-header"><span>2. Quyish Liniyasi</span><span class="column-count" id="count-quyish">0</span></div>
+            <div class="column-cards" id="cards-quyish"></div>
+          </div>
+          <div class="kanban-column" id="col-sklad">
+            <div class="column-header"><span>3. Skladga Urildi</span><span class="column-count" id="count-sklad">0</span></div>
+            <div class="column-cards" id="cards-sklad"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -218,8 +242,8 @@
       document.getElementById('sb-yetkazuvchi').classList.toggle('active', type === 'yetkazuvchi');
     }
 
-    // DINAMIK KANBAN FUNKSIYALARI
-    function addToKanban(stage) {
+    // 🚀 YOUGILE USLUBIDAGI DINAMIK KANBAN KODI
+    function addToKanban() {
       const name = document.getElementById('mikserSeryo').value;
       const kg = document.getElementById('mikserKg').value;
       if(!kg) return alert("Kg miqdorini kiriting!");
@@ -230,7 +254,7 @@
       fetch(API_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "manageReactorStock", seryo_nomi: name, required_kg: kg, is_cancellation: false }) });
       
       renderKanban();
-      // 5 soniyadan keyin avtomatik Quyish liniyasiga siljiydi
+      // 4 soniyadan keyin silliq Quyish liniyasiga o'tadi
       setTimeout(() => {
         if(activeBatch && activeBatch.stage === 'reaktor') {
           activeBatch.stage = 'quyish';
@@ -244,7 +268,7 @@
       fetch(API_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "manageReactorStock", seryo_nomi: activeBatch.name, required_kg: activeBatch.kg, is_cancellation: true }) });
       activeBatch = null;
       renderKanban();
-      alert("Partiya bekor qilindi, seryo omborga qaytdi!");
+      alert("Partiya bekor qilindi, xomashyo omborga qaytarildi!");
     }
 
     function moveToSklad() {
@@ -255,13 +279,11 @@
       activeBatch.stage = 'sklad';
       renderKanban();
 
-      // Arxivga urish
       fetch(API_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "archiveProduction", tayyor_mahsulot: activeBatch.name, jami_kg: activeBatch.kg, kanistr_turi: "5L", jami_dona: count, umumiy_tannarx_uzs: finalCost }) })
       .then(() => {
         alert("Skladga muvaffaqiyatli urildi!");
-        // Pechat naxladnoy ochiladi
         const pWin = window.open('', '_blank');
-        pWin.document.write(`<html><body><h2>EURA COMPIL NAKLADNOYI</h2><p>Mahsulot: ${activeBatch.name}</p><p>Vazni: ${activeBatch.kg} kg</p><p>Soni: ${count} dona</p><p>Tannarx: ${finalCost.toLocaleString()} UZS</p><script>window.print();<\/script></body></html>`);
+        pWin.document.write(`<html><head><style>body{font-family:Arial;padding:20px;}</style></head><body><h2>EURA COMPIL NAKLADNOYI</h2><hr><p><b>Mahsulot:</b> ${activeBatch.name}</p><p><b>Vazni:</b> ${activeBatch.kg} kg</p><p><b>Soni:</b> ${count} dona</p><p><b>Umumiy Tannarx:</b> ${finalCost.toLocaleString()} UZS</p><script>window.print();<\/script></body></html>`);
         pWin.document.close();
         activeBatch = null;
         setTimeout(renderKanban, 3000);
@@ -280,7 +302,7 @@
         document.getElementById('cards-' + activeBatch.stage).innerHTML = `
           <div class="kanban-card">
             <div class="kanban-card-title">${activeBatch.name}</div>
-            <div class="kanban-card-info"><i class="fa-solid fa-weight-hanging"></i> ${activeBatch.kg} Kg</div>
+            <div class="kanban-card-info"><i class="fa-solid fa-weight-hanging"></i> ${Number(activeBatch.kg).toLocaleString()} Kg</div>
           </div>`;
       }
     }
@@ -320,6 +342,26 @@
       const finalCost = (count * kg * liquidCost) + (count * containerCost);
       document.getElementById('totalCostView').innerText = finalCost.toLocaleString('ru-RU');
       return { count, finalCost };
+    }
+
+    function saveSupplier() {
+      const name = document.getElementById("fNom").value;
+      const phone = document.getElementById("fTel").value;
+      const address = document.getElementById("fManzil").value;
+      if(!name) return alert("Firma nomini kiriting!");
+      fetch(API_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "addSupplier", name, phone, address }) }).then(() => { alert("Firma saqlandi!"); loadAllData(); });
+    }
+
+    function saveKirim() {
+      const nomi = document.getElementById("inNom").value;
+      const kg = Number(document.getElementById("inKg").value);
+      const tara = Number(document.getElementById("inTara").value);
+      const price_uzs = Number(document.getElementById("inUzs").value);
+      const price_usd = Number(document.getElementById("inUsd").value);
+      const supplier = document.getElementById("inSupplierSelect").value;
+      if(!nomi || !kg) return alert("Ma'lumotlarni to'ldiring!");
+      const netto = kg - tara;
+      fetch(API_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "addTaminotKirim", nomi, kg: netto, tara, price_uzs, price_usd, total_uzs: netto * price_uzs, total_usd: netto * price_usd, supplier }) }).then(() => { alert("Kirim omborga urildi!"); loadAllData(); });
     }
 
     window.onload = () => { loadAllData(); renderKanban(); };
