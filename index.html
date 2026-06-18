@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EURA COMPIL - Ishlab chiqarish paneli</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    /* Canva uslubidagi Glassmorphism dizayni */
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      margin: 0;
+      padding: 15px;
+      min-height: 100vh;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 22px;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+    .header p {
+      font-size: 12px;
+      opacity: 0.7;
+      margin: 5px 0 0 0;
+    }
+    /* Shaffof shisha kontaynerlar */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 5px;
+      color: #00d2ff;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 5px;
+      opacity: 0.9;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00d2ff;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    /* Knopkalar */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #f857a6, #ff5858);
+      color: white;
+      margin-top: 10px;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    /* Tablitsasimon ro'yxat */
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+    }
+    .data-row:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>EURA COMPIL</h1>
+    <p>Zavod ishlab chiqarishni boshqarish pulti</p>
+  </div>
+
+  <!-- 1. MIKSER (Reaktor bo'limi) -->
+  <div class="glass-card">
+    <div class="card-title">🏭 1. Mikser (Reaktor bo'limi)</div>
+    <div class="form-group">
+      <label>Xomashyo (Seryo) nomi</label>
+      <input type="text" id="mikserSeryo" value="Aktiv Pena">
+    </div>
+    <div class="form-group">
+      <label>Talab qilinadigan miqdor (Kg)</label>
+      <input type="number" id="mikserKg" placeholder="Masalan: 150">
+    </div>
+    <button class="btn btn-primary" onclick="manageReactor(false)">🚀 Reaktorga yuborish (Skladdan ayirish)</button>
+    <button class="btn btn-secondary" onclick="manageReactor(true)">❌ Zakazni bekor qilish (Cancel)</button>
+  </div>
+
+  <!-- 2. QUYISH LINIYASI (Kanaban) -->
+  <div class="glass-card">
+    <div class="card-title">🍾 2. Quyish liniyasi & Tannarx</div>
+    <div class="form-group">
+      <label>Kanistrlar soni (Dona)</label>
+      <input type="number" id="canisterCount" placeholder="0" oninput="calculateTotal()">
+    </div>
+    <div class="form-group">
+      <label>Bitta bo'sh idish narxi (UZS)</label>
+      <input type="number" id="costPerCanister" value="4500" oninput="calculateTotal()">
+    </div>
+    <div class="form-group">
+      <label>Reagent 1 kg tannarxi (UZS)</label>
+      <input type="number" id="liquidCostPerKg" value="12000" oninput="calculateTotal()">
+    </div>
+    <div class="form-group">
+      <label>Bitta idish hajmi (Kg)</label>
+      <input type="number" id="kgPerCanister" value="5" oninput="calculateTotal()">
+    </div>
+    
+    <div style="margin: 15px 0; font-size: 14px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+      <strong>Jami hisoblangan tannarx:</strong> <span id="totalCostView" style="color: #00ffcc; font-weight: bold;">0</span> UZS
+    </div>
+    
+    <button class="btn btn-primary" onclick="archiveAndPrint()">🖨️ Arxivlash va Nakladnoy chiqarish</button>
+  </div>
+
+  <script>
+    // Telegram Web App'ni ishga tushiramiz
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand(); // Ekran to'liq ochilishi uchun
+
+    const API_URL = "https://script.google.com/macros/s/AKfycbzpM02RSnBD4nlbZzJ5ld9lz2Fc6doANeaXRW8wH51CmYdZqRMGij3cyPiA-E7gJW7mzQ/exec";
+
+    // 1. Mikser boshqaruvi
+    function manageReactor(isCancellation) {
+      const seryo = document.getElementById('mikserSeryo').value;
+      const kg = document.getElementById('mikserKg').value;
+      
+      if(!kg) { alert("Iltimos, kg miqdorini kiriting!"); return; }
+
+      tg.MainButton.setText("Bajarilmoqda...").show();
+
+      fetch(API_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "manageReactorStock",
+          seryo_nomi: seryo,
+          required_kg: kg,
+          is_cancellation: isCancellation
+        })
+      }).then(() => {
+        tg.MainButton.hide();
+        alert(isCancellation ? "Zakaz bekor qilindi, seryo omborga qaytarildi!" : "Muvaffaqiyatli bajarildi! Ombordan ayrildi.");
+      }).catch(err => {
+        tg.MainButton.hide();
+        alert("Xatolik yuz berdi: " + err);
+      });
+    }
+
+    // 2. Matematik hisob-kitob (Tannarx)
+    function calculateTotal() {
+      const count = Number(document.getElementById('canisterCount').value) || 0;
+      const containerCost = Number(document.getElementById('costPerCanister').value) || 0;
+      const liquidCost = Number(document.getElementById('liquidCostPerKg').value) || 0;
+      const kg = Number(document.getElementById('kgPerCanister').value) || 0;
+
+      const totalLiquidKg = count * kg;
+      const totalLiquidCost = totalLiquidKg * liquidCost;
+      const totalCanisterCost = count * containerCost;
+      const finalCost = totalLiquidCost + totalCanisterCost;
+
+      document.getElementById('totalCostView').innerText = finalCost.toLocaleString('ru-RU');
+      return { count, kg, finalCost };
+    }
+
+    // 3. Arxivlash va Nakladnoy oynasini ochish
+    function archiveAndPrint() {
+      const { count, kg, finalCost } = calculateTotal();
+      const seryo = document.getElementById('mikserSeryo').value;
+      
+      if(count === 0) { alert("Kanistrlar sonini kiriting!"); return; }
+
+      tg.MainButton.setText("Arxivlanmoqda...").show();
+
+      // Google Tablicaga arxiv qatorini yozish
+      fetch(API_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "archiveProduction",
+          tayyor_mahsulot: seryo,
+          jami_kg: count * kg,
+          kanistr_turi: kg + "L Kanistr",
+          jami_dona: count,
+          umumiy_tannarx_uzs: finalCost
+        })
+      }).then(() => {
+        tg.MainButton.hide();
+        // Nakladnoy pechat qilish oynasini ochish
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+          <html>
+          <head><title>EURA COMPIL NAKLADNOYI</title><style>body{font-family:Arial;padding:20px;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #333;padding:10px;text-align:left;}</style></head>
+          <body>
+            <h2>EURA COMPIL<br>Ishlab chiqarish hujjati</h2>
+            <p><strong>Sana:</strong> ${new Date().toLocaleString()}</p>
+            <table>
+              <tr><th>Mahsulot</th><td>${seryo}</td></tr>
+              <tr><th>Jami og'irlik</th><td>${count * kg} kg</td></tr>
+              <tr><th>Kanistrlar soni</th><td>${count} dona (${kg}L)</td></tr>
+              <tr><th>Umumiy Tannarx</th><td>${finalCost.toLocaleString()} UZS</td></tr>
+            </table>
+            <br><br><p align="right">Imzo: _________________</p>
+            <script>window.print();<\/script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }).catch(err => {
+        tg.MainButton.hide();
+        alert("Xatolik: " + err);
+      });
+    }
+  </script>
+</body>
+</html>
