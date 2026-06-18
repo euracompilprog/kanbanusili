@@ -14,72 +14,67 @@
     .brand-logo { font-size: 22px; font-weight: 800; color: #007bb5; margin: 0; }
     .brand-sub { font-size: 11px; color: #718096; letter-spacing: 2px; margin-top: 3px; }
     .menu-list { list-style: none; padding: 0; margin: 20px 0; flex-grow: 1; }
-    .menu-item { display: flex; align-items: center; padding: 12px 15px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; color: #4a5568; transition: all 0.2s; }
+    .menu-item { display: flex; align-items: center; padding: 12px 15px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; color: #4a5568; }
     .menu-item i { margin-right: 12px; width: 20px; font-size: 16px; }
     .menu-item.active { background: #e6f4ea; color: #1e7e34; font-weight: 600; }
-    .menu-item:hover:not(.active) { background: #f7fafc; }
     .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
     .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .content-title { font-size: 22px; font-weight: 700; color: #1a202c; margin: 0; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-    .ui-card { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
+    .ui-card { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #edf2f7; margin-bottom: 20px; }
     .card-title-text { font-size: 16px; font-weight: 700; color: #2d3748; margin: 0 0 20px 0; display: flex; align-items: center; }
     .card-title-text i { margin-right: 10px; color: #4299e1; }
-    .form-control { margin-bottom: 18px; }
-    .form-control label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
-    .form-control input { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: #f7fafc; }
-    .btn-action { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
-    .btn-orange { background: #dd6b20; color: white; }
-    .btn-blue { background: #3182ce; color: white; margin-top: 15px; }
-    .result-box { margin-top: 15px; padding: 12px; background: #edf2f7; border-radius: 8px; font-weight: 600; }
     
-    /* Sklad Jadvali */
+    /* Ichki sub-tab tugmalari */
+    .sub-tab-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+    .sub-btn { padding: 8px 16px; border: 1px solid #cbd5e0; background: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .sub-btn.active { background: #3182ce; color: white; border-color: #3182ce; }
+
+    /* Kartochka dizayni (Tayyor mahsulotlar uchun) */
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    .product-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .product-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #f7fafc; }
+    .product-title { font-size: 14px; font-weight: 700; margin: 5px 0; }
+    .product-stock { font-size: 13px; color: #2f855a; font-weight: 600; }
+
+    /* Formalar va jadvallar */
+    .form-control { margin-bottom: 15px; }
+    .form-control label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; }
+    .form-control input, .form-control select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; }
+    .btn-action { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; background: #3182ce; color: white; }
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
-    th { background-color: #f7fafc; color: #4a5568; font-weight: 600; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+    th { background: #f7fafc; color: #4a5568; }
+    .clickable-row { cursor: pointer; }
+    .clickable-row:hover { background: #f0f4f8; }
   </style>
 </head>
 <body>
 
   <div class="sidebar">
     <div>
-      <div class="brand-section">
-        <h1 class="brand-logo">EURA COMPIL</h1>
-        <div class="brand-sub">FACTORY OS 2026</div>
-      </div>
+      <div class="brand-section"><h1 class="brand-logo">EURA COMPIL</h1><div class="brand-sub">FACTORY OS 2026</div></div>
       <ul class="menu-list">
-        <li class="menu-item" onclick="switchTab('kassa', this)"><i class="fa-solid fa-wallet"></i> Kassa & Moliyaviy</li>
-        <li class="menu-item" onclick="switchTab('sklad', this)"><i class="fa-solid fa-warehouse"></i> Zavod Ombori (Sklad)</li>
-        <li class="menu-item active" onclick="switchTab('mikser', this)"><i class="fa-solid fa-flask"></i> Ishlab Chiqarish (Mikser)</li>
-        <li class="menu-item" onclick="switchTab('taminot', this)"><i class="fa-solid fa-truck-ramp-box"></i> Ta'minot (Kirim)</li>
-        <li class="menu-item" onclick="switchTab('sotuv', this)"><i class="fa-solid fa-chart-line"></i> Logistika & Sotuv</li>
-        <li class="menu-item" onclick="switchTab('arxiv', this)"><i class="fa-solid fa-file-invoice-dollar"></i> Arxiv & Nakladnoylar</li>
+        <li class="menu-item" id="m-sklad" onclick="switchTab('sklad')"><i class="fa-solid fa-warehouse"></i> Zavod Ombori (Sklad)</li>
+        <li class="menu-item active" id="m-mikser" onclick="switchTab('mikser')"><i class="fa-solid fa-flask"></i> Ishlab Chiqarish (Mikser)</li>
+        <li class="menu-item" id="m-taminot" onclick="switchTab('taminot')"><i class="fa-solid fa-truck-ramp-box"></i> Ta'minot (Kirim)</li>
       </ul>
     </div>
-    <div style="background: #edf2f7; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center;">
-      💵 KURS (USD/UZS): <span style="color:#2b6cb0;">12,800</span>
-    </div>
+    <div style="background: #edf2f7; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center;">💵 KURS: 12,800</div>
   </div>
 
   <div class="main-content">
-    <div class="content-header">
-      <h2 class="content-title" id="pageTitle">Ishlab Chiqarish Mikser</h2>
-      <div style="background: #e6f4ea; color: #1e7e34; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-        Onlayn
-      </div>
-    </div>
+    <div class="content-header"><h2 class="content-title" id="pageTitle">Ishlab Chiqarish Mikser</h2></div>
 
-    <!-- MIKSER TAB -->
+    <!-- MIKSER TAB (TEGILMADI!) -->
     <div id="tab-mikser" class="tab-content active">
       <div class="grid-container">
         <div class="ui-card">
           <h3 class="card-title-text"><i class="fa-solid fa-gears"></i> Mikser Reaktorini To'ldirish</h3>
           <div class="form-control"><label>Brend nomi</label><input type="text" id="mikserSeryo" value="Aktiv Pena"></div>
           <div class="form-control"><label>Talab miqdori (Kg)</label><input type="number" id="mikserKg" placeholder="Masalan: 150"></div>
-          <button class="btn btn-action btn-orange" onclick="manageReactor(false)">Mikserni Yoqish</button>
-          <button class="btn btn-action btn-blue" onclick="manageReactor(true)">Reaktor Blokini Cancel qilish</button>
+          <button class="btn btn-action" style="background:#dd6b20;" onclick="manageReactor(false)">Mikserni Yoqish</button>
         </div>
         <div class="ui-card">
           <h3 class="card-title-text"><i class="fa-solid fa-calculator"></i> Quyish Liniyasi & Tannarx</h3>
@@ -87,102 +82,218 @@
           <div class="form-control"><label>Bo'sh idish narxi (UZS)</label><input type="number" id="costPerCanister" value="4500" oninput="calculateTotal()"></div>
           <div class="form-control"><label>Reagent 1 kg tannarxi (UZS)</label><input type="number" id="liquidCostPerKg" value="12000" oninput="calculateTotal()"></div>
           <div class="form-control"><label>Bitta idish hajmi (Kg)</label><input type="number" id="kgPerCanister" value="5" oninput="calculateTotal()"></div>
-          <div class="result-box">Jami tannarx: <span id="totalCostView">0</span> UZS</div>
-          <button class="btn btn-action btn-blue" style="margin-top:20px; background:#2f855a;" onclick="archiveAndPrint()">Arxivlash va Nakladnoy</button>
+          <button class="btn btn-action" style="background:#2f855a;" onclick="archiveAndPrint()">Arxivlash va Nakladnoy</button>
         </div>
       </div>
     </div>
 
-    <!-- SKLAD TAB -->
+    <!-- ZAVOD OMBORI TAB -->
     <div id="tab-sklad" class="tab-content">
-      <div class="ui-card">
-        <h3 class="card-title-text"><i class="fa-solid fa-boxes-stacked"></i> Real vaqtdagi xomashyo qoldiqlari</h3>
-        <button class="btn btn-action btn-blue" style="width:auto; padding:10px 20px;" onclick="loadStockData()">🔄 Yangilash</button>
-        <table id="stockTable">
-          <thead>
-            <tr><th>Xomashyo nomi</th><th>Qoldiq (Kg)</th><th>Tannarxi (UZS)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="3">Yuklanmoqda...</td></tr>
-          </tbody>
-        </table>
+      <div class="sub-tab-nav">
+        <button class="sub-btn active" id="sb-tayyor" onclick="switchSubSklad('tayyor')">📦 Tayyor Mahsulotlar (Kartochka)</button>
+        <button class="sub-btn" id="sb-hom" onclick="switchSubSklad('hom')">🧪 Xomashyolar (Seryo)</button>
+      </div>
+      
+      <!-- Sub 1: Tayyor mahsulotlar kartochka usulida -->
+      <div id="sub-sklad-tayyor" class="sub-content">
+        <div class="product-grid" id="tayyorGrid"><!-- Dinamik yuklanadi --></div>
+      </div>
+      
+      <!-- Sub 2: Xomashyolar jadvali -->
+      <div id="sub-sklad-hom" class="sub-content" style="display:none;">
+        <div class="ui-card">
+          <table id="seryoTable">
+            <thead><tr><th>Xomashyo</th><th>Qoldiq (Kg)</th><th>Tannarx (UZS)</th><th>Yangilangan</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- QOLGAN TABLAR UCHUN ODDIY OYNA -->
-    <div id="tab-kassa" class="tab-content"><h3>Kassa bo'limi tez kunda ishga tushadi...</h3></div>
-    <div id="tab-taminot" class="tab-content"><h3>Ta'minot bo'limi tez kunda ishga tushadi...</h3></div>
-    <div id="tab-sotuv" class="tab-content"><h3>Logistika bo'limi tez kunda ishga tushadi...</h3></div>
-    <div id="tab-arxiv" class="tab-content"><h3>Arxiv bo'limi tez kunda ishga tushadi...</h3></div>
+    <!-- TA'MINOT TAB -->
+    <div id="tab-taminot" class="tab-content">
+      <div class="sub-tab-nav">
+        <button class="sub-btn active" id="sb-kelish" onclick="switchSubTaminot('kelish')">📥 Xomashyo Kirim (Kelish)</button>
+        <button class="sub-btn" id="sb-yetkazuvchi" onclick="switchSubTaminot('yetkazuvchi')">🤝 Yetkazib beruvchilar</button>
+      </div>
+
+      <!-- Sub 1: Kelish bo'limi -->
+      <div id="sub-taminot-kelish" class="sub-content">
+        <div class="grid-container">
+          <div class="ui-card">
+            <h3 class="card-title-text">Yangi Xomashyo Qo'shish</h3>
+            <div class="form-control"><label>Xomashyo nomi</label><input type="text" id="inNom"></div>
+            <div class="form-control"><label>Kelgan Og'irlik (Kg)</label><input type="number" id="inKg"></div>
+            <div class="form-control"><label>Tara Og'irligi (Kg)</label><input type="number" id="inTara" value="0"></div>
+            <div class="form-control"><label>Tannarx (So'mda)</label><input type="number" id="inUzs"></div>
+            <div class="form-control"><label>Tannarx (Dollarda)</label><input type="number" id="inUsd"></div>
+            <div class="form-control"><label>Yetkazib beruvchi</label><select id="inSupplierSelect"></select></div>
+            <button class="btn btn-action" onclick="saveKirim()">Baza va Omborgacha Kirim qilish</button>
+          </div>
+          <div class="ui-card">
+            <h3 class="card-title-text">Oxirgi Kirimlar Tarixi</h3>
+            <table id="kirimTarixiTable">
+              <thead><tr><th>Sana</th><th>Nomi</th><th>Netto (Kg)</th><th>Jami So'm</th><th>Jami $</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub 2: Yetkazib beruvchilar -->
+      <div id="sub-taminot-yetkazuvchi" class="sub-content" style="display:none;">
+        <div class="grid-container">
+          <div class="ui-card">
+            <h3 class="card-title-text">Yangi Firma Kiritish</h3>
+            <div class="form-control"><label>Firma nomi (Masalan: Toshkent Meret)</label><input type="text" id="fNom"></div>
+            <div class="form-control"><label>Telefon raqami</label><input type="text" id="fTel"></div>
+            <div class="form-control"><label>Address (Manzil)</label><input type="text" id="fManzil"></div>
+            <button class="btn btn-action" onclick="saveSupplier()">Firmani saqlash</button>
+          </div>
+          <div class="ui-card">
+            <h3 class="card-title-text">Hamkorlar Ro'yxati (Tarix ko'rish uchun bosing)</h3>
+            <table id="supplierTable">
+              <thead><tr><th>Firma Nomi</th><th>Telefon</th><th>Manzil</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzpM02RSnBD4nlbZzJ5ld9lz2Fc6doANeaXRW8wH51CmYdZqRMGij3cyPiA-E7gJW7mzQ/exec";
+    let globalData = {};
 
-    // Bo'limlarni almashtirish funksiyasi
-    function switchTab(tabName, element) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-      
-      document.getElementById('tab-' + tabName).classList.add('active');
-      element.classList.add('active');
-      
-      const titles = { mikser: "Ishlab Chiqarish Mikser", sklad: "Zavod Ombori (Sklad)", kassa: "Kassa & Moliyaviy", taminot: "Ta'minot", sotuv: "Logistika & Sotuv", arxiv: "Arxiv" };
-      document.getElementById('pageTitle').innerText = titles[tabName];
-
-      if(tabName === 'sklad') { loadStockData(); }
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+      document.getElementById('tab-' + tabName).style.display = 'block';
+      document.getElementById('m-' + tabName).classList.add('active');
+      loadAllData();
     }
 
-    // Google Tablicadan xomashyo qoldiqlarini o'qish
-    function loadStockData() {
-      const tbody = document.querySelector("#stockTable tbody");
-      tbody.innerHTML = "<tr><td colspan='3'>Google Tablicadan o'qilmoqda...</td></tr>";
-      
-      fetch(API_URL)
-        .then(res => res.json())
-        .then(response => {
-          if(response.status === "success") {
-            tbody.innerHTML = "";
-            response.data.forEach(item => {
-              tbody.innerHTML += `<tr><td>${item.name}</td><td>${Number(item.stock).toLocaleString()} kg</td><td>${Number(item.price).toLocaleString()} UZS</td></tr>`;
-            });
-          }
-        }).catch(err => tbody.innerHTML = "<tr><td colspan='3'>Xatolik yuz berdi!</td></tr>");
+    function switchSubSklad(type) {
+      document.getElementById('sub-sklad-tayyor').style.display = type === 'tayyor' ? 'block' : 'none';
+      document.getElementById('sub-sklad-hom').style.display = type === 'hom' ? 'block' : 'none';
+      document.getElementById('sb-tayyor').classList.toggle('active', type === 'tayyor');
+      document.getElementById('sb-hom').classList.toggle('active', type === 'hom');
     }
 
-    function manageReactor(isCancellation) {
+    function switchSubTaminot(type) {
+      document.getElementById('sub-taminot-kelish').style.display = type === 'kelish' ? 'block' : 'none';
+      document.getElementById('sub-taminot-yetkazuvchi').style.display = type === 'yetkazuvchi' ? 'block' : 'none';
+      document.getElementById('sb-kelish').classList.toggle('active', type === 'kelish');
+      document.getElementById('sb-yetkazuvchi').classList.toggle('active', type === 'yetkazuvchi');
+    }
+
+    function loadAllData() {
+      fetch(API_URL).then(res => res.json()).then(res => {
+        if(res.status === "success") {
+          globalData = res;
+          renderSklad();
+          renderTaminot();
+        }
+      });
+    }
+
+    function renderSklad() {
+      // 1. Tayyor mahsulot kartochkalari
+      const grid = document.getElementById("tayyorGrid");
+      grid.innerHTML = globalData.tayyor.length ? "" : "<p>Tayyor mahsulot kiritilmagan</p>";
+      globalData.tayyor.forEach(p => {
+        grid.innerHTML += `<div class="product-card">
+          <img src="${p.img || 'https://placehold.co/100'}" alt="img">
+          <div class="product-title">${p.name}</div>
+          <div class="product-stock">${p.qty} dona (${p.type})</div>
+        </div>`;
+      });
+
+      // 2. Xomashyo jadvali
+      const sBody = document.querySelector("#seryoTable tbody");
+      sBody.innerHTML = "";
+      globalData.seryo.forEach(s => {
+        sBody.innerHTML += `<tr><td><b>${s.name}</b></td><td>${s.stock} kg</td><td>${Number(s.price).toLocaleString()} UZS</td><td>${s.updated ? new Date(s.updated).toLocaleDateString() : '-'}</td></tr>`;
+      });
+    }
+
+    function renderTaminot() {
+      // Select yuklash
+      const select = document.getElementById("inSupplierSelect");
+      select.innerHTML = "";
+      // Firma jadvali
+      const fBody = document.querySelector("#supplierTable tbody");
+      fBody.innerHTML = "";
+      
+      globalData.firmalar.forEach(f => {
+        select.innerHTML += `<option value="${f.name}">${f.name}</option>`;
+        fBody.innerHTML += `<tr class="clickable-row" onclick="viewSupplierHistory('${f.name}')"><td><b>${f.name}</b></td><td>${f.phone}</td><td>${f.address}</td></tr>`;
+      });
+
+      // Kirimlar tarixi
+      const kBody = document.querySelector("#kirimTarixiTable tbody");
+      kBody.innerHTML = "";
+      globalData.taminot_tarixi.slice(-5).reverse().forEach(k => {
+        kBody.innerHTML += `<tr><td>${new Date(k.date).toLocaleDateString()}</td><td>${k.name}</td><td>${k.kg} kg</td><td>${Number(k.total_uzs).toLocaleString()}</td><td>$${k.total_usd}</td></tr>`;
+      });
+    }
+
+    function saveSupplier() {
+      const name = document.getElementById("fNom").value;
+      const phone = document.getElementById("fTel").value;
+      const address = document.getElementById("fManzil").value;
+      if(!name) return alert("Nomini kiriting!");
+
+      fetch(API_URL, {
+        method: "POST", mode: "no-cors",
+        body: JSON.stringify({ action: "addSupplier", name, phone, address })
+      }).then(() => { alert("Firma qo'shildi!"); loadAllData(); });
+    }
+
+    function saveKirim() {
+      const nomi = document.getElementById("inNom").value;
+      const kg = Number(document.getElementById("inKg").value);
+      const tara = Number(document.getElementById("inTara").value);
+      const price_uzs = Number(document.getElementById("inUzs").value);
+      const price_usd = Number(document.getElementById("inUsd").value);
+      const supplier = document.getElementById("inSupplierSelect").value;
+      
+      if(!nomi || !kg) return alert("Ma'lumotlarni to'ldiring!");
+      const netto = kg - tara;
+
+      fetch(API_URL, {
+        method: "POST", mode: "no-cors",
+        body: JSON.stringify({
+          action: "addTaminotKirim", nomi, kg: netto, tara, price_uzs, price_usd,
+          total_uzs: netto * price_uzs, total_usd: netto * price_usd, supplier
+        })
+      }).then(() => { alert("Kirim omborga urildi!"); loadAllData(); });
+    }
+
+    function viewSupplierHistory(supplierName) {
+      const history = globalData.taminot_tarixi.filter(k => k.supplier === supplierName);
+      let html = `<h3>${supplierName} firmasi bilan kirim tarixi hujjati</h3><table border="1" style="width:100%; border-collapse:collapse;"><tr><th>Sana</th><th>Xomashyo</th><th>Og'irlik</th><th>Summa (UZS)</th></tr>`;
+      let total = 0;
+      history.forEach(h => {
+        html += `<tr><td>${new Date(h.date).toLocaleDateString()}</td><td>${h.name}</td><td>${h.kg} kg</td><td>${Number(h.total_uzs).toLocaleString()} UZS</td></tr>`;
+        total += Number(h.total_uzs);
+      });
+      html += `<tr><td colspan="3"><b>Jami Hisob:</b></td><td><b>${total.toLocaleString()} UZS</b></td></tr></table>`;
+      
+      const pWin = window.open('', '_blank');
+      pWin.document.write(`<html><body>${html}<br><button onclick="window.print()">Chop etish (Nakladnoy)</button></body></html>`);
+      pWin.document.close();
+    }
+
+    // Eski Mikser funksiyalari (Tegilmasin!)
+    function manageReactor(isCancel) {
       const seryo = document.getElementById('mikserSeryo').value;
       const kg = document.getElementById('mikserKg').value;
-      if(!kg) { alert("Kg kiriting!"); return; }
-      fetch(API_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "manageReactorStock", seryo_nomi: seryo, required_kg: kg, is_cancellation: isCancellation })
-      }).then(() => alert("Bajarildi!")).catch(err => alert(err));
+      fetch(API_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "manageReactorStock", seryo_nomi: seryo, required_kg: kg, is_cancellation: isCancel }) }).then(() => alert("Mikser bajarildi!"));
     }
-
-    function calculateTotal() {
-      const count = Number(document.getElementById('canisterCount').value) || 0;
-      const containerCost = Number(document.getElementById('costPerCanister').value) || 0;
-      const liquidCost = Number(document.getElementById('liquidCostPerKg').value) || 0;
-      const kg = Number(document.getElementById('kgPerCanister').value) || 0;
-      const finalCost = (count * kg * liquidCost) + (count * containerCost);
-      document.getElementById('totalCostView').innerText = finalCost.toLocaleString('ru-RU');
-      return { count, kg, finalCost };
-    }
-
-    function archiveAndPrint() {
-      const { count, kg, finalCost } = calculateTotal();
-      const seryo = document.getElementById('mikserSeryo').value;
-      if(count === 0) { alert("Kanistr sonini kiriting!"); return; }
-      fetch(API_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "archiveProduction", tayyor_mahsulot: seryo, jami_kg: count * kg, kanistr_turi: kg + "L Kanistr", jami_dona: count,  umumiy_tannarx_uzs: finalCost })
-      }).then(() => { alert("Arxivlandi!"); }).catch(err => alert(err));
-    }
+    window.onload = loadAllData;
   </script>
 </body>
 </html>
