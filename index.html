@@ -7,195 +7,42 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --primary-color: #0088cc;
-      --bg-light: #f4f7f6;
-      --text-dark: #333333;
-    }
-    body {
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-    /* Chap tarafdagi Premium menyu */
-    .sidebar {
-      width: 260px;
-      background: #ffffff;
-      border-right: 1px solid #e0e0e0;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      justify-content: space-between;
-    }
-    .brand-section {
-      text-align: center;
-      padding-bottom: 25px;
-      border-bottom: 2px dashed #e2e8f0;
-    }
-    .brand-logo {
-      font-size: 22px;
-      font-weight: 800;
-      color: #007bb5;
-      margin: 0;
-    }
-    .brand-sub {
-      font-size: 11px;
-      color: #718096;
-      letter-spacing: 2px;
-      margin-top: 3px;
-    }
-    .menu-list {
-      list-style: none;
-      padding: 0;
-      margin: 20px 0 flex-grow;
-    }
-    .menu-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 15px;
-      margin-bottom: 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      color: #4a5568;
-      transition: all 0.2s;
-    }
-    .menu-item i {
-      margin-right: 12px;
-      width: 20px;
-      font-size: 16px;
-    }
-    .menu-item.active {
-      background: #e6f4ea;
-      color: #1e7e34;
-      font-weight: 600;
-    }
-    .menu-item:hover:not(.active) {
-      background: #f7fafc;
-    }
+    :root { font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; background-color: #f8fafc; color: #333; }
+    .sidebar { width: 260px; background: #ffffff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; padding: 20px; justify-content: space-between; }
+    .brand-section { text-align: center; padding-bottom: 25px; border-bottom: 2px dashed #e2e8f0; }
+    .brand-logo { font-size: 22px; font-weight: 800; color: #007bb5; margin: 0; }
+    .brand-sub { font-size: 11px; color: #718096; letter-spacing: 2px; margin-top: 3px; }
+    .menu-list { list-style: none; padding: 0; margin: 20px 0; flex-grow: 1; }
+    .menu-item { display: flex; align-items: center; padding: 12px 15px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; color: #4a5568; transition: all 0.2s; }
+    .menu-item i { margin-right: 12px; width: 20px; font-size: 16px; }
+    .menu-item.active { background: #e6f4ea; color: #1e7e34; font-weight: 600; }
+    .menu-item:hover:not(.active) { background: #f7fafc; }
+    .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
+    .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .content-title { font-size: 22px; font-weight: 700; color: #1a202c; margin: 0; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    .ui-card { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
+    .card-title-text { font-size: 16px; font-weight: 700; color: #2d3748; margin: 0 0 20px 0; display: flex; align-items: center; }
+    .card-title-text i { margin-right: 10px; color: #4299e1; }
+    .form-control { margin-bottom: 18px; }
+    .form-control label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
+    .form-control input { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: #f7fafc; }
+    .btn-action { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-orange { background: #dd6b20; color: white; }
+    .btn-blue { background: #3182ce; color: white; margin-top: 15px; }
+    .result-box { margin-top: 15px; padding: 12px; background: #edf2f7; border-radius: 8px; font-weight: 600; }
     
-    /* O'ng tarafdagi asosiy ishchi oyna */
-    .main-content {
-      flex-grow: 1;
-      padding: 30px;
-      overflow-y: auto;
-      background: #f8fafc;
-    }
-    .content-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    .content-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a202c;
-      margin: 0;
-    }
-    .status-badge {
-      background: #e6f4ea;
-      color: #1e7e34;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    /* Oq chiroyli kartochkalar */
-    .grid-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 25px;
-    }
-    .ui-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-      border: 1px solid #edf2f7;
-    }
-    .card-title-text {
-      font-size: 16px;
-      font-weight: 700;
-      color: #2d3748;
-      margin-top: 0;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-    }
-    .card-title-text i {
-      margin-right: 10px;
-      color: #4299e1;
-    }
-
-    /* Elegant formalar */
-    .form-control {
-      margin-bottom: 18px;
-    }
-    .form-control label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #4a5568;
-      margin-bottom: 6px;
-    }
-    .form-control input, .form-control select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e0;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 14px;
-      background-color: #f7fafc;
-    }
-    .form-control input:focus {
-      outline: none;
-      border-color: #4299e1;
-      background-color: #fff;
-    }
-
-    /* Premium tugmalar */
-    .btn-action {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-orange {
-      background: #dd6b20;
-      color: white;
-    }
-    .btn-orange:hover { background: #c05621; }
-    .btn-blue {
-      background: #3182ce;
-      color: white;
-      margin-top: 15px;
-    }
-    .btn-blue:hover { background: #2b6cb0; }
-
-    .result-box {
-      margin-top: 15px;
-      padding: 12px;
-      background: #edf2f7;
-      border-radius: 8px;
-      font-weight: 600;
-    }
+    /* Sklad Jadvali */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    th { background-color: #f7fafc; color: #4a5568; font-weight: 600; }
   </style>
 </head>
 <body>
 
-  <!-- CHAP TARAFI MENYU -->
   <div class="sidebar">
     <div>
       <div class="brand-section">
@@ -203,12 +50,12 @@
         <div class="brand-sub">FACTORY OS 2026</div>
       </div>
       <ul class="menu-list">
-        <li class="menu-item"><i class="fa-solid var(--cite-color, #f56565) fa-wallet"></i> Kassa & Moliyaviy</li>
-        <li class="menu-item"><i class="fa-solid fa-warehouse"></i> Zavod Ombori (Sklad)</li>
-        <li class="menu-item active"><i class="fa-solid fa-flask"></i> Ishlab Chiqarish (Mikser)</li>
-        <li class="menu-item"><i class="fa-solid fa-truck-ramp-box"></i> Ta'minot (Kirim)</li>
-        <li class="menu-item"><i class="fa-solid fa-chart-line"></i> Logistika & Sotuv</li>
-        <li class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i> Arxiv & Nakladnoylar</li>
+        <li class="menu-item" onclick="switchTab('kassa', this)"><i class="fa-solid fa-wallet"></i> Kassa & Moliyaviy</li>
+        <li class="menu-item" onclick="switchTab('sklad', this)"><i class="fa-solid fa-warehouse"></i> Zavod Ombori (Sklad)</li>
+        <li class="menu-item active" onclick="switchTab('mikser', this)"><i class="fa-solid fa-flask"></i> Ishlab Chiqarish (Mikser)</li>
+        <li class="menu-item" onclick="switchTab('taminot', this)"><i class="fa-solid fa-truck-ramp-box"></i> Ta'minot (Kirim)</li>
+        <li class="menu-item" onclick="switchTab('sotuv', this)"><i class="fa-solid fa-chart-line"></i> Logistika & Sotuv</li>
+        <li class="menu-item" onclick="switchTab('arxiv', this)"><i class="fa-solid fa-file-invoice-dollar"></i> Arxiv & Nakladnoylar</li>
       </ul>
     </div>
     <div style="background: #edf2f7; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center;">
@@ -216,82 +63,103 @@
     </div>
   </div>
 
-  <!-- O'NG TARAFI ASOSIY OYNA -->
   <div class="main-content">
     <div class="content-header">
-      <h2 class="content-title">Ishlab Chiqarish Mikser</h2>
-      <div class="status-badge"><i class="fa-solid fa-circle" style="font-size:8px; margin-right:5px; color:#2f855a;"></i> Tizim Holati: Onlayn</div>
-    </div>
-
-    <div class="grid-container">
-      <!-- 1. REAKTOR BLOKI -->
-      <div class="ui-card">
-        <h3 class="card-title-text"><i class="fa-solid fa-gears"></i> Mikser Reaktorini To'ldirish</h3>
-        <div class="form-control">
-          <label>Brend nomi (masalan: NEMON)</label>
-          <input type="text" id="mikserSeryo" value="Aktiv Pena">
-        </div>
-        <div class="form-control">
-          <label>Talab qilinadigan miqdor (Kg)</label>
-          <input type="number" id="mikserKg" placeholder="Masalan: 150">
-        </div>
-        <button class="btn btn-action btn-orange" onclick="manageReactor(false)"><i class="fa-solid fa-fire"></i> Mikserni Yoqish (Reaktorga yuborish)</button>
-        <button class="btn btn-action btn-blue" onclick="manageReactor(true)"><i class="fa-solid fa-rotate-left"></i> Reaktor Blokini Bekor Qilish (Cancel)</button>
-      </div>
-
-      <!-- 2. QUYISH VA TANNARX BLOKI -->
-      <div class="ui-card">
-        <h3 class="card-title-text"><i class="fa-solid fa-calculator"></i> Quyish Liniyasi & Tannarx</h3>
-        <div class="form-control">
-          <label>Kanistrlar soni (Dona)</label>
-          <input type="number" id="canisterCount" placeholder="0" oninput="calculateTotal()">
-        </div>
-        <div class="form-control">
-          <label>Bitta bo'sh idish narxi (UZS)</label>
-          <input type="number" id="costPerCanister" value="4500" oninput="calculateTotal()">
-        </div>
-        <div class="form-control">
-          <label>Reagent 1 kg tannarxi (UZS)</label>
-          <input type="number" id="liquidCostPerKg" value="12000" oninput="calculateTotal()">
-        </div>
-        <div class="form-control">
-          <label>Bitta idish hajmi (Kg)</label>
-          <input type="number" id="kgPerCanister" value="5" oninput="calculateTotal()">
-        </div>
-        
-        <div class="result-box">
-          Jami hisoblangan tannarx: <span id="totalCostView" style="color: #2b6cb0;">0</span> UZS
-        </div>
-        <button class="btn btn-action btn-blue" style="margin-top:20px; background:#2f855a;" onclick="archiveAndPrint()"><i class="fa-solid fa-print"></i> Arxivlash va Nakladnoy chiqarish</button>
+      <h2 class="content-title" id="pageTitle">Ishlab Chiqarish Mikser</h2>
+      <div style="background: #e6f4ea; color: #1e7e34; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+        Onlayn
       </div>
     </div>
+
+    <!-- MIKSER TAB -->
+    <div id="tab-mikser" class="tab-content active">
+      <div class="grid-container">
+        <div class="ui-card">
+          <h3 class="card-title-text"><i class="fa-solid fa-gears"></i> Mikser Reaktorini To'ldirish</h3>
+          <div class="form-control"><label>Brend nomi</label><input type="text" id="mikserSeryo" value="Aktiv Pena"></div>
+          <div class="form-control"><label>Talab miqdori (Kg)</label><input type="number" id="mikserKg" placeholder="Masalan: 150"></div>
+          <button class="btn btn-action btn-orange" onclick="manageReactor(false)">Mikserni Yoqish</button>
+          <button class="btn btn-action btn-blue" onclick="manageReactor(true)">Reaktor Blokini Cancel qilish</button>
+        </div>
+        <div class="ui-card">
+          <h3 class="card-title-text"><i class="fa-solid fa-calculator"></i> Quyish Liniyasi & Tannarx</h3>
+          <div class="form-control"><label>Kanistrlar soni (Dona)</label><input type="number" id="canisterCount" oninput="calculateTotal()"></div>
+          <div class="form-control"><label>Bo'sh idish narxi (UZS)</label><input type="number" id="costPerCanister" value="4500" oninput="calculateTotal()"></div>
+          <div class="form-control"><label>Reagent 1 kg tannarxi (UZS)</label><input type="number" id="liquidCostPerKg" value="12000" oninput="calculateTotal()"></div>
+          <div class="form-control"><label>Bitta idish hajmi (Kg)</label><input type="number" id="kgPerCanister" value="5" oninput="calculateTotal()"></div>
+          <div class="result-box">Jami tannarx: <span id="totalCostView">0</span> UZS</div>
+          <button class="btn btn-action btn-blue" style="margin-top:20px; background:#2f855a;" onclick="archiveAndPrint()">Arxivlash va Nakladnoy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKLAD TAB -->
+    <div id="tab-sklad" class="tab-content">
+      <div class="ui-card">
+        <h3 class="card-title-text"><i class="fa-solid fa-boxes-stacked"></i> Real vaqtdagi xomashyo qoldiqlari</h3>
+        <button class="btn btn-action btn-blue" style="width:auto; padding:10px 20px;" onclick="loadStockData()">🔄 Yangilash</button>
+        <table id="stockTable">
+          <thead>
+            <tr><th>Xomashyo nomi</th><th>Qoldiq (Kg)</th><th>Tannarxi (UZS)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="3">Yuklanmoqda...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- QOLGAN TABLAR UCHUN ODDIY OYNA -->
+    <div id="tab-kassa" class="tab-content"><h3>Kassa bo'limi tez kunda ishga tushadi...</h3></div>
+    <div id="tab-taminot" class="tab-content"><h3>Ta'minot bo'limi tez kunda ishga tushadi...</h3></div>
+    <div id="tab-sotuv" class="tab-content"><h3>Logistika bo'limi tez kunda ishga tushadi...</h3></div>
+    <div id="tab-arxiv" class="tab-content"><h3>Arxiv bo'limi tez kunda ishga tushadi...</h3></div>
   </div>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-
     const API_URL = "https://script.google.com/macros/s/AKfycbzpM02RSnBD4nlbZzJ5ld9lz2Fc6doANeaXRW8wH51CmYdZqRMGij3cyPiA-E7gJW7mzQ/exec";
+
+    // Bo'limlarni almashtirish funksiyasi
+    function switchTab(tabName, element) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabName).classList.add('active');
+      element.classList.add('active');
+      
+      const titles = { mikser: "Ishlab Chiqarish Mikser", sklad: "Zavod Ombori (Sklad)", kassa: "Kassa & Moliyaviy", taminot: "Ta'minot", sotuv: "Logistika & Sotuv", arxiv: "Arxiv" };
+      document.getElementById('pageTitle').innerText = titles[tabName];
+
+      if(tabName === 'sklad') { loadStockData(); }
+    }
+
+    // Google Tablicadan xomashyo qoldiqlarini o'qish
+    function loadStockData() {
+      const tbody = document.querySelector("#stockTable tbody");
+      tbody.innerHTML = "<tr><td colspan='3'>Google Tablicadan o'qilmoqda...</td></tr>";
+      
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(response => {
+          if(response.status === "success") {
+            tbody.innerHTML = "";
+            response.data.forEach(item => {
+              tbody.innerHTML += `<tr><td>${item.name}</td><td>${Number(item.stock).toLocaleString()} kg</td><td>${Number(item.price).toLocaleString()} UZS</td></tr>`;
+            });
+          }
+        }).catch(err => tbody.innerHTML = "<tr><td colspan='3'>Xatolik yuz berdi!</td></tr>");
+    }
 
     function manageReactor(isCancellation) {
       const seryo = document.getElementById('mikserSeryo').value;
       const kg = document.getElementById('mikserKg').value;
-      if(!kg) { alert("Iltimos, kg miqdorini kiriting!"); return; }
-
+      if(!kg) { alert("Kg kiriting!"); return; }
       fetch(API_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "manageReactorStock",
-          seryo_nomi: seryo,
-          required_kg: kg,
-          is_cancellation: isCancellation
-        })
-      }).then(() => {
-        alert(isCancellation ? "Reaktor bekor qilindi, seryo qaytarildi!" : "Muvaffaqiyatli reaktorga yuborildi!");
-      }).catch(err => alert("Xatolik: " + err));
+        body: JSON.stringify({ action: "manageReactorStock", seryo_nomi: seryo, required_kg: kg, is_cancellation: isCancellation })
+      }).then(() => alert("Bajarildi!")).catch(err => alert(err));
     }
 
     function calculateTotal() {
@@ -299,7 +167,6 @@
       const containerCost = Number(document.getElementById('costPerCanister').value) || 0;
       const liquidCost = Number(document.getElementById('liquidCostPerKg').value) || 0;
       const kg = Number(document.getElementById('kgPerCanister').value) || 0;
-
       const finalCost = (count * kg * liquidCost) + (count * containerCost);
       document.getElementById('totalCostView').innerText = finalCost.toLocaleString('ru-RU');
       return { count, kg, finalCost };
@@ -308,41 +175,13 @@
     function archiveAndPrint() {
       const { count, kg, finalCost } = calculateTotal();
       const seryo = document.getElementById('mikserSeryo').value;
-      if(count === 0) { alert("Kanistrlar sonini kiriting!"); return; }
-
+      if(count === 0) { alert("Kanistr sonini kiriting!"); return; }
       fetch(API_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "archiveProduction",
-          tayyor_mahsulot: seryo,
-          jami_kg: count * kg,
-          kanistr_turi: kg + "L Kanistr",
-          jami_dona: count,
-          umumiy_tannarx_uzs: finalCost
-        })
-      }).then(() => {
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-          <html>
-          <head><title>EURA COMPIL NAKLADNOYI</title><style>body{font-family:Arial;padding:20px;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #333;padding:10px;text-align:left;}</style></head>
-          <body>
-            <h2>EURA COMPIL PRODUCTION</h2>
-            <p><strong>Sana:</strong> ${new Date().toLocaleString()}</p>
-            <table>
-              <tr><th>Mahsulot</th><td>${seryo}</td></tr>
-              <tr><th>Jami og'irlik</th><td>${count * kg} kg</td></tr>
-              <tr><th>Kanistrlar soni</th><td>${count} dona (${kg}L)</td></tr>
-              <tr><th>Umumiy Tannarx</th><td>${finalCost.toLocaleString()} UZS</td></tr>
-            </table>
-            <br><br><p align="right">Mas'ul xodim imzosi: _________________</p>
-            <script>window.print();<\/script>
-          </body>
-          </html>
-        `);
-        printWindow.document.close();
-      }).catch(err => alert("Xatolik: " + err));
+        body: JSON.stringify({ action: "archiveProduction", tayyor_mahsulot: seryo, jami_kg: count * kg, kanistr_turi: kg + "L Kanistr", jami_dona: count,  umumiy_tannarx_uzs: finalCost })
+      }).then(() => { alert("Arxivlandi!"); }).catch(err => alert(err));
     }
   </script>
 </body>
