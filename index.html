@@ -59,8 +59,8 @@
           border-radius: 16px;
       }
       /* ============ LAYOUT ============ */
-      .layout { display: flex; width: 100%; height: 100%; min-height: 100vh; }
-      .main-container { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+      .layout { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
+      .main-container { flex: 1; min-width: 0; height: 100vh; overflow-y: auto; overflow-x: hidden; }
       .sidebar {
           width: 72px;
           display: flex;
@@ -187,13 +187,13 @@
           backdrop-filter: blur(12px); z-index: 9999;
       }
       .theme-btn:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
-      .top-bar { height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); flex-shrink:0; }
-      .top-bar h3 { font-size: 20px; font-weight: 700; padding: 25px 0; }
-.status-badge { font-weight: 600; color: var(--primary); background: rgba(14, 165, 233, 0.1); padding: 8px 16px; border-radius: 20px; float: right; margin-top: -45px; margin-right: 40px; }
-      .content { flex: 1; padding: 24px 32px; overflow-y: auto; min-width: 0; }
+      .top-bar { position: sticky; top: 0; z-index: 50; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; border-bottom: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(12px); }
+      .top-bar h3 { font-size: 20px; font-weight: 700; padding: 0; }
+      .status-badge { font-weight: 600; color: var(--primary); background: rgba(14, 165, 233, 0.1); padding: 8px 16px; border-radius: 20px; }
+      .content { padding: 0; }
       .view-section { display: none; }
-      .view-section.active { display: block; animation: fadeIn 0.4s ease; }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .view-section.active { display: block; animation: fadeIn 0.4s ease; padding: 0 32px 24px; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
       /* ============ FORMS & INPUTS ============ */
       .panel { margin-bottom: 25px; padding: 25px; border-radius: 16px; position: relative; }
@@ -487,28 +487,40 @@
       }
 
       /* ============ MOBILE APP MODE ============ */
+      /* ===== MOBILE MODE ===== */
       body.mobile-mode .sidebar { display: none !important; }
-      body.mobile-mode .layout { flex-direction: column; }
-      body.mobile-mode .content { padding: 12px 14px 90px; }
-      body.mobile-mode .top-bar { height: 56px; padding: 0 14px; }
-      body.mobile-mode .top-bar h3 { font-size: 15px; }
+      body.mobile-mode .main-container { width: 100vw; }
+      body.mobile-mode .top-bar { padding: 0 14px; }
+      body.mobile-mode .top-bar h3 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55vw; }
       body.mobile-mode .status-badge { display: none; }
+      body.mobile-mode .view-mode-btn span { display: none; }
+      body.mobile-mode .view-mode-btn { padding: 7px 10px; }
+      body.mobile-mode .view-section.active { padding: 10px 10px 80px; }
+
+      /* Mobile tables: horizontal scroll */
+      body.mobile-mode table { min-width: 480px; }
+      body.mobile-mode .glass-card { border-radius: 12px; padding: 12px !important; margin-bottom: 10px !important; }
+      body.mobile-mode .panel { padding: 14px; }
 
       #mobile-nav {
           display: none;
           position: fixed;
           bottom: 0; left: 0; right: 0;
-          height: 68px;
+          height: 62px;
           z-index: 600;
-          align-items: center;
-          justify-content: space-around;
-          padding: 0 4px 4px;
-          box-shadow: 0 -2px 24px rgba(0,0,0,0.10);
+          align-items: stretch;
+          justify-content: stretch;
+          padding: 0;
+          box-shadow: 0 -1px 20px rgba(0,0,0,0.12);
           background: var(--glass-bg);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border-top: 1px solid var(--glass-border);
+          overflow-x: auto;
+          overflow-y: hidden;
+          scrollbar-width: none;
       }
+      #mobile-nav::-webkit-scrollbar { display: none; }
       body.mobile-mode #mobile-nav { display: flex; }
 
       .mobile-nav-btn {
@@ -516,25 +528,27 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 3px;
-          flex: 1;
-          height: 60px;
+          gap: 2px;
+          flex: 0 0 64px;
+          min-width: 56px;
+          height: 62px;
           border: none;
           background: transparent;
           color: var(--text-muted);
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.18s;
           font-size: 9px;
           font-weight: 700;
-          border-radius: 12px;
-          letter-spacing: 0.3px;
-          padding: 0 2px;
+          border-radius: 0;
+          padding: 0 4px;
+          white-space: nowrap;
+          -webkit-tap-highlight-color: transparent;
       }
-      .mobile-nav-btn i { font-size: 19px; transition: transform 0.2s; }
-      .mobile-nav-btn.active { color: var(--primary); }
-      .mobile-nav-btn.active i { transform: scale(1.15); }
-      .mobile-nav-btn:hover { color: var(--primary); background: rgba(14,165,233,0.08); }
-      .mobile-nav-divider { width: 1px; height: 32px; background: var(--glass-border); flex-shrink: 0; }
+      .mobile-nav-btn i { font-size: 17px; transition: transform 0.18s; line-height: 1; }
+      .mobile-nav-btn span { font-size: 9px; line-height: 1; max-width: 60px; overflow: hidden; text-overflow: ellipsis; }
+      .mobile-nav-btn.active { color: var(--primary); background: rgba(14,165,233,0.07); }
+      .mobile-nav-btn.active i { transform: scale(1.12); }
+      .mobile-nav-divider { width: 1px; min-width: 1px; align-self: center; height: 28px; background: var(--glass-border); flex-shrink: 0; margin: 0 2px; }
 
       /* View mode toggle button in topbar */
       .view-mode-btn {
@@ -551,6 +565,7 @@
       }
       .view-mode-btn:hover { border-color: var(--primary); color: var(--primary); }
       body.mobile-mode .view-mode-btn { border-color: rgba(14,165,233,0.4); color: var(--primary); background: rgba(14,165,233,0.08); }
+      body.mobile-mode #profile-topbar-badge { display: none !important; }
     /* ===== LOGIN OVERLAY ===== */
   #login-overlay {
       position:fixed;inset:0;z-index:9999;
@@ -804,7 +819,7 @@
           <button class="menu-btn" data-label="Sotuv" onclick="switchView('shop-sales')" data-profiles="shop"><i class="fa-solid fa-cash-register"></i></button>
           <button class="menu-btn" data-label="Hisobot" onclick="switchView('shop-report')" data-profiles="shop"><i class="fa-solid fa-chart-line"></i></button>
           <!-- Menejer profil menyusi -->
-          <button class="menu-btn" data-label="Umumiy Ko'rinish" onclick="switchView('mgr-overview')" data-profiles="manager"><i class="fa-solid fa-gauge-high"></i></button>
+          <button class="menu-btn" data-label="Ma'lumotlar Oynasi" onclick="switchView('mgr-data')" data-profiles="manager"><i class="fa-solid fa-database"></i></button>
           <button class="menu-btn" data-label="Dillerlar" onclick="switchView('mgr-dillers')" data-profiles="manager"><i class="fa-solid fa-people-group"></i></button>
           <button class="menu-btn" data-label="Sotuv & Yetkazish" onclick="switchView('mgr-sales')" data-profiles="manager"><i class="fa-solid fa-truck-fast"></i></button>
           <button class="menu-btn" data-label="Hisobot" onclick="switchView('mgr-report')" data-profiles="manager"><i class="fa-solid fa-chart-bar"></i></button>
@@ -1510,23 +1525,23 @@
 
       <!-- ===== DOKON PROFILI VIEWLARI ===== -->
       <div id="shop-warehouse" class="view-section">
-          <div style="padding:16px;">
+          <div>
               <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-boxes-stacking" style="color:#10b981;"></i> Dokon Ombori</div>
-              <!-- Kelgan tovarlar (qabul kutilayotgan) -->
+              <!-- Zavoddan kelayotgan tovarlar -->
               <div class="glass-card" style="border-radius:16px;padding:18px;margin-bottom:16px;">
-                  <div style="font-size:13px;font-weight:900;color:var(--text-main);margin-bottom:12px;"><i class="fa-solid fa-clock" style="color:#f59e0b;"></i> Kutilayotgan Tovarlar (Zavoddan)</div>
+                  <div style="font-size:13px;font-weight:900;color:var(--text-main);margin-bottom:12px;"><i class="fa-solid fa-truck-arrow-right" style="color:#f59e0b;margin-right:6px;"></i>Zavoddan Kelayotgan Tovarlar</div>
                   <div id="shop-pending-list"></div>
               </div>
-              <!-- Qabul qilingan ombor -->
+              <!-- Ombor -->
               <div class="glass-card" style="border-radius:16px;padding:18px;">
-                  <div style="font-size:13px;font-weight:900;color:var(--text-main);margin-bottom:12px;"><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> Dokon Qoldiq Ombori</div>
-                  <div id="shop-inventory-list"></div>
+                  <div style="font-size:13px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-warehouse" style="color:#10b981;margin-right:6px;"></i>Ombor</div>
+                  <div id="shop-inventory-list" class="ombor-cards-grid"></div>
               </div>
           </div>
       </div>
 
       <div id="shop-sales" class="view-section">
-          <div style="padding:16px;">
+          <div>
               <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-cash-register" style="color:#10b981;"></i> Sotuv</div>
               <div style="display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start;">
                   <!-- Sotuv formasi -->
@@ -1565,73 +1580,118 @@
       </div>
 
       <div id="shop-report" class="view-section">
-          <div style="padding:16px;">
+          <div>
               <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> Dokon Hisoboti</div>
               <div id="shop-report-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;"></div>
           </div>
       </div>
 
       <!-- ===== MENEJER PROFILI VIEWLARI ===== -->
-      <div id="mgr-overview" class="view-section">
-          <div style="padding:20px;">
-              <!-- === YUQORI PANEL: sarlavha + tugmalar === -->
-              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px;">
-                  <div>
-                      <div style="font-size:22px;font-weight:900;color:var(--text-main);letter-spacing:-0.5px;">
-                          <i class="fa-solid fa-gauge-high" style="color:#a855f7;margin-right:8px;"></i>Umumiy Ko'rinish
-                      </div>
-                      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Menejer boshqaruv paneli</div>
-                  </div>
-                  <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                      <button onclick="switchView('mgr-sales')" style="padding:11px 22px;border:none;border-radius:12px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(168,85,247,0.35);transition:transform .15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-                          <i class="fa-solid fa-plus"></i> Yangi Sotuv
-                      </button>
-                      <button onclick="switchView('mgr-dillers')" style="padding:11px 22px;border:1.5px solid rgba(168,85,247,0.45);border-radius:12px;background:rgba(168,85,247,0.08);color:#a855f7;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:transform .15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-                          <i class="fa-solid fa-user-plus"></i> Diler Qo'shish
-                      </button>
-                  </div>
+      <div id="mgr-data" class="view-section">
+          <!-- STAT KARTOCHKALAR -->
+          <div id="mgr-data-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;"></div>
+
+          <!-- BARCHA FAKTURALAR -->
+          <div class="glass-card" style="border-radius:16px;padding:18px;margin-bottom:14px;">
+              <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                  <i class="fa-solid fa-file-invoice-dollar" style="color:#a855f7;"></i> Barcha Fakturalar
+                  <span id="mgr-data-inv-count" style="font-size:11px;font-weight:700;color:var(--text-muted);background:rgba(168,85,247,0.1);padding:2px 10px;border-radius:20px;margin-left:4px;"></span>
               </div>
-
-              <!-- === STAT KARTOCHKALAR (bosilganda o'tadi) === -->
-              <div id="mgr-overview-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;"></div>
-
-              <!-- === HAFTALIK SOTUV GRAFIGI === -->
-              <div class="glass-card" style="border-radius:18px;padding:20px;margin-bottom:16px;">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                      <div style="font-size:14px;font-weight:900;color:var(--text-main);">
-                          <i class="fa-solid fa-chart-line" style="color:#a855f7;margin-right:6px;"></i>Haftalik Sotuv Dinamikasi
-                      </div>
-                      <div style="font-size:11px;color:var(--text-muted);background:rgba(168,85,247,0.1);padding:4px 10px;border-radius:20px;">So'nggi 7 kun</div>
-                  </div>
-                  <div id="mgr-line-chart-wrap" style="overflow-x:auto;">
-                      <svg id="mgr-line-svg" width="100%" height="180" viewBox="0 0 700 180" style="display:block;min-width:400px;"></svg>
-                  </div>
+              <div style="overflow-x:auto;">
+                  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                      <thead><tr style="background:rgba(168,85,247,0.08);">
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Sana</th>
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Diller</th>
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Mahsulotlar</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">Summa</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">To'langan</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">Qoldiq</th>
+                          <th style="padding:8px 10px;text-align:center;font-weight:800;color:var(--text-muted);font-size:11px;">Holat</th>
+                      </tr></thead>
+                      <tbody id="mgr-data-inv-body"></tbody>
+                  </table>
               </div>
+          </div>
 
-              <!-- === KUTILAYOTGAN TOVARLAR === -->
-              <div class="glass-card" style="border-radius:18px;padding:20px;">
-                  <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:12px;">
-                      <i class="fa-solid fa-clock" style="color:#f59e0b;margin-right:6px;"></i>Zavoddan Kelgan Tovarlar (Kutilmoqda)
-                  </div>
-                  <div id="mgr-pending-list"></div>
+          <!-- DILLERLAR VA QARZLAR -->
+          <div class="glass-card" style="border-radius:16px;padding:18px;margin-bottom:14px;">
+              <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                  <i class="fa-solid fa-people-group" style="color:#2563eb;"></i> Dillerlar va Qarzlar
+              </div>
+              <div style="overflow-x:auto;">
+                  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                      <thead><tr style="background:rgba(37,99,235,0.07);">
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">#</th>
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Diller</th>
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Telefon</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">Jami Zakaz</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">To'langan</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">Qarz</th>
+                      </tr></thead>
+                      <tbody id="mgr-data-dillers-body"></tbody>
+                  </table>
+              </div>
+          </div>
+
+          <!-- KUTILAYOTGAN TOVARLAR -->
+          <div class="glass-card" style="border-radius:16px;padding:18px;margin-bottom:14px;">
+              <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                  <i class="fa-solid fa-clock" style="color:#f59e0b;"></i> Zavoddan Kutilayotgan Tovarlar
+                  <span id="mgr-data-pend-count" style="font-size:11px;font-weight:700;color:var(--text-muted);background:rgba(245,158,11,0.12);padding:2px 10px;border-radius:20px;margin-left:4px;"></span>
+              </div>
+              <div id="mgr-data-pending"></div>
+          </div>
+
+          <!-- SOTUV TARIXI -->
+          <div class="glass-card" style="border-radius:16px;padding:18px;margin-bottom:14px;">
+              <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                  <i class="fa-solid fa-receipt" style="color:#10b981;"></i> Sotuv Tarixi
+              </div>
+              <div style="overflow-x:auto;">
+                  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                      <thead><tr style="background:rgba(16,185,129,0.07);">
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Sana</th>
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Diller</th>
+                          <th style="padding:8px 10px;text-align:left;font-weight:800;color:var(--text-muted);font-size:11px;">Mahsulot</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">Dona</th>
+                          <th style="padding:8px 10px;text-align:right;font-weight:800;color:var(--text-muted);font-size:11px;">Summa</th>
+                          <th style="padding:8px 10px;text-align:center;font-weight:800;color:var(--text-muted);font-size:11px;">To'lov</th>
+                      </tr></thead>
+                      <tbody id="mgr-data-sales-body"></tbody>
+                  </table>
               </div>
           </div>
       </div>
 
       <div id="mgr-dillers" class="view-section">
-          <div style="padding:20px;">
-              <!-- Sarlavha + Qo'shish tugmasi -->
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-                  <div>
-                      <div style="font-size:22px;font-weight:900;color:var(--text-main);"><i class="fa-solid fa-people-group" style="color:#a855f7;margin-right:8px;"></i>Dillerlar Ro'yxati</div>
-                      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Barcha hamkor dillerlar va ularning hisob-kitobi</div>
-                  </div>
-                  <button onclick="openDillerModal()" style="padding:12px 22px;border:none;border-radius:14px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(168,85,247,0.35);">
+          <div>
+              <!-- Sarlavha + tugmalar -->
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+                  <button onclick="openDillerModal()" style="padding:12px 22px;border:none;border-radius:14px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(168,85,247,0.35);flex-shrink:0;">
                       <i class="fa-solid fa-plus" style="font-size:16px;"></i> Diller Qo'shish
                   </button>
+                  <div>
+                      <div style="font-size:22px;font-weight:900;color:var(--text-main);"><i class="fa-solid fa-people-group" style="color:#a855f7;margin-right:8px;"></i>Dillerlar</div>
+                      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Barcha hamkor dillerlar va ularning hisob-kitobi</div>
+                  </div>
               </div>
-              <!-- Dillerlar ro'yxati -->
-              <div id="diller-list"></div>
+              <!-- Tablar -->
+              <div style="display:flex;gap:8px;margin-bottom:18px;">
+                  <button id="dtab-list" onclick="switchDillerTab('list')" style="padding:9px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:800;font-size:13px;cursor:pointer;">
+                      <i class="fa-solid fa-list"></i> Ro'yxat
+                  </button>
+                  <button id="dtab-analytics" onclick="switchDillerTab('analytics')" style="padding:9px 20px;border:1.5px solid rgba(168,85,247,0.35);border-radius:10px;background:transparent;color:#a855f7;font-weight:800;font-size:13px;cursor:pointer;">
+                      <i class="fa-solid fa-chart-bar"></i> Analitika
+                  </button>
+              </div>
+              <!-- Ro'yxat tab -->
+              <div id="dtab-content-list">
+                  <div id="diller-list"></div>
+              </div>
+              <!-- Analitika tab -->
+              <div id="dtab-content-analytics" style="display:none;">
+                  <div id="diller-analytics-content"></div>
+              </div>
           </div>
       </div>
 
@@ -1662,59 +1722,167 @@
       </div>
 
       <!-- Diller Detail Modal -->
-      <div id="diller-detail-modal" style="display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);align-items:center;justify-content:center;overflow-y:auto;padding:20px;">
-          <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:24px;width:700px;max-width:98vw;box-shadow:0 20px 60px rgba(0,0,0,0.25);margin:auto;">
-              <div id="diller-detail-content"></div>
+      <div id="diller-detail-modal" style="display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px;">
+          <div style="background:#ffffff;border-radius:16px;width:100%;max-width:1400px;box-shadow:0 32px 100px rgba(0,0,0,0.35);margin:auto;min-height:calc(100vh - 32px);display:flex;flex-direction:column;">
+              <div id="diller-detail-content" style="flex:1;display:flex;flex-direction:column;"></div>
+          </div>
+      </div>
+
+      <!-- To'lov qabul qilish modal -->
+      <div id="payment-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+          <div style="background:#ffffff;border-radius:20px;width:100%;max-width:480px;margin:16px;box-shadow:0 32px 100px rgba(0,0,0,0.4);overflow:hidden;">
+              <!-- Header -->
+              <div style="background:linear-gradient(135deg,#16a34a,#15803d);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;">
+                  <div>
+                      <div style="font-size:18px;font-weight:900;color:#fff;">💵 To'lov Qabul Qilish</div>
+                      <div id="payment-modal-diller-name" style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:3px;"></div>
+                  </div>
+                  <button onclick="document.getElementById('payment-modal').style.display='none'" style="width:36px;height:36px;border:none;border-radius:10px;background:rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+              </div>
+              <!-- Qarz holati -->
+              <div id="payment-modal-debt-info" style="padding:14px 24px;background:#f0fdf4;border-bottom:1px solid #d1fae5;font-size:13px;"></div>
+              <!-- Forma -->
+              <div style="padding:20px 24px;">
+                  <div style="margin-bottom:12px;">
+                      <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">To'lov miqdori (UZS)</div>
+                      <input type="text" inputmode="numeric" id="pay-amount" placeholder="0" style="width:100%;padding:12px 14px;border:2px solid #d1fae5;border-radius:10px;font-size:18px;font-weight:800;color:#16a34a;background:#f0fdf4;outline:none;" oninput="fmtInput(this);updatePaymentPreview()">
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                      <div>
+                          <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Mas'ul shaxs</div>
+                          <input type="text" id="pay-responsible" placeholder="Ismi" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:13px;background:#f8fafc;">
+                      </div>
+                      <div>
+                          <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">To'lov turi</div>
+                          <select id="pay-type" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:13px;background:#f8fafc;">
+                              <option value="naqd">💵 Naqd</option>
+                              <option value="plastik">💳 Plastik</option>
+                              <option value="bank">🏦 Bank o'tkazma</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div style="margin-bottom:12px;">
+                      <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Izoh</div>
+                      <input type="text" id="pay-comment" placeholder="Qaysi oy uchun, sababi..." style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:13px;background:#f8fafc;">
+                  </div>
+                  <div style="margin-bottom:16px;">
+                      <div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">📷 Isbot rasmi (ixtiyoriy)</div>
+                      <div style="display:flex;align-items:center;gap:10px;">
+                          <label for="pay-img" style="padding:9px 16px;border:1.5px dashed #cbd5e1;border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;color:#64748b;display:flex;align-items:center;gap:6px;background:#f8fafc;flex:1;justify-content:center;">
+                              <i class="fa-solid fa-camera" style="color:#2563eb;"></i> Rasm yuklash
+                          </label>
+                          <input type="file" id="pay-img" accept="image/*" style="display:none;" onchange="previewPayImg()">
+                          <div id="pay-img-preview" style="flex-shrink:0;"></div>
+                      </div>
+                  </div>
+                  <!-- Preview yangi qarz -->
+                  <div id="payment-preview" style="display:none;padding:12px;background:#eff6ff;border-radius:10px;margin-bottom:16px;text-align:center;font-size:12px;color:#1d4ed8;"></div>
+                  <button onclick="confirmPayment()" style="width:100%;padding:13px;border:none;border-radius:11px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(22,163,74,0.35);display:flex;align-items:center;justify-content:center;gap:8px;">
+                      <i class="fa-solid fa-check-circle"></i> To'lovni Tasdiqlash
+                  </button>
+              </div>
           </div>
       </div>
 
       <div id="mgr-sales" class="view-section">
-          <div style="padding:16px;">
-              <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-truck-fast" style="color:#a855f7;"></i> Dillerlarga Sotuv</div>
-              <div style="display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start;">
-                  <div class="glass-card" style="border-radius:16px;padding:18px;">
-                      <div style="font-size:13px;font-weight:800;margin-bottom:14px;">Yangi Sotuv</div>
-                      <div class="form-group"><label>Diller</label>
-                          <select id="mgr-sale-diller" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;"></select>
+          <div>
+              <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-truck-fast" style="color:#2563eb;"></i> Dillerlarga Sotuv — Faktura</div>
+              <div style="display:grid;grid-template-columns:480px 1fr;gap:16px;align-items:start;">
+
+                  <!-- ==== CHAP: Forma ==== -->
+                  <div class="glass-card" style="border-radius:16px;padding:20px;">
+
+                      <!-- Diller -->
+                      <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Diller</div>
+                      <select id="mgr-sale-diller" style="background:var(--input-bg);color:var(--text-main);border:1.5px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;margin-bottom:14px;font-weight:700;"></select>
+
+                      <!-- Tovarlar savati -->
+                      <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;"><i class="fa-solid fa-box" style="color:#2563eb;margin-right:4px;"></i>Tovarlar</div>
+                      <div id="mgr-cart-items" style="margin-bottom:8px;"></div>
+
+                      <!-- Tovar qo'shish qatori -->
+                      <div style="display:grid;grid-template-columns:1fr 80px 110px 36px;gap:6px;align-items:center;background:rgba(37,99,235,0.04);border:1.5px dashed rgba(37,99,235,0.25);border-radius:10px;padding:10px;margin-bottom:14px;">
+                          <div style="display:flex;align-items:center;gap:7px;">
+                              <div id="mgr-item-img-preview" style="flex-shrink:0;"></div>
+                              <select id="mgr-sale-item" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;"></select>
+                          </div>
+                          <input type="number" id="mgr-sale-qty" min="1" placeholder="Dona" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;font-size:12px;width:100%;">
+                          <input type="text" inputmode="numeric" id="mgr-sale-price" placeholder="Narh/dona" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;font-size:12px;width:100%;" oninput="fmtInput(this)">
+                          <button onclick="addMgrCartItem()" style="width:36px;height:36px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">+</button>
                       </div>
-                      <div class="form-group"><label>Tovar</label>
-                          <select id="mgr-sale-item" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;"></select>
+
+                      <!-- Jami tovar -->
+                      <div id="mgr-cart-total" style="display:none;text-align:right;padding:8px 12px;background:#eff6ff;border-radius:8px;margin-bottom:14px;font-size:13px;font-weight:800;color:#1d4ed8;"></div>
+
+                      <!-- Dostavka -->
+                      <div style="border-top:1px solid var(--glass-border);padding-top:12px;margin-bottom:14px;">
+                          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;"><i class="fa-solid fa-truck" style="color:#f59e0b;margin-right:4px;"></i>Dostavka</div>
+                          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                              <div>
+                                  <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px;">Transport raqami</div>
+                                  <input type="text" id="mgr-transport-num" placeholder="01 A 123 BC" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;">
+                              </div>
+                              <div>
+                                  <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px;">Haydovchi telefoni</div>
+                                  <input type="text" id="mgr-transport-phone" placeholder="+998 __ ___ __ __" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;">
+                              </div>
+                          </div>
+                          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                              <div>
+                                  <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px;">Dostavka narhi (UZS)</div>
+                                  <input type="text" inputmode="numeric" id="mgr-delivery-cost" placeholder="0" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;" oninput="fmtInput(this)">
+                              </div>
+                              <div>
+                                  <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px;">Kim to'laydi?</div>
+                                  <select id="mgr-delivery-payer" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;">
+                                      <option value="diller">Diller to'laydi (+qarz)</option>
+                                      <option value="biz">Biz to'laymiz (-qarzdan)</option>
+                                  </select>
+                              </div>
+                          </div>
                       </div>
-                      <div class="form-group"><label>Miqdor (dona)</label>
-                          <input type="number" id="mgr-sale-qty" min="1" placeholder="Dona" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;">
+
+                      <!-- Menejer -->
+                      <div style="border-top:1px solid var(--glass-border);padding-top:12px;margin-bottom:14px;">
+                          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;"><i class="fa-solid fa-user-tie" style="color:#8b5cf6;margin-right:4px;"></i>Mas'ul Menejer</div>
+                          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                              <div>
+                                  <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px;">Menejer ismi</div>
+                                  <input type="text" id="mgr-name" placeholder="Ismi" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;">
+                              </div>
+                              <div>
+                                  <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px;">Menejer telefoni</div>
+                                  <input type="text" id="mgr-phone" placeholder="+998 __ ___ __ __" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:7px;padding:8px;width:100%;font-size:12px;">
+                              </div>
+                          </div>
                       </div>
-                      <div class="form-group"><label>Sotuv Narhi (UZS/dona)</label>
-                          <input type="number" id="mgr-sale-price" placeholder="Narh" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;">
-                      </div>
-                      <div class="form-group"><label>To'lov turi</label>
-                          <select id="mgr-sale-pay" style="background:var(--input-bg);color:var(--text-main);border:1px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;">
-                              <option value="naqd">Naqd</option>
-                              <option value="plastik">Plastik</option>
-                              <option value="nasiya">Nasiya (qarzdor)</option>
+
+                      <!-- To'lov -->
+                      <div style="border-top:1px solid var(--glass-border);padding-top:12px;margin-bottom:14px;">
+                          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;"><i class="fa-solid fa-credit-card" style="color:#16a34a;margin-right:4px;"></i>To'lov</div>
+                          <select id="mgr-sale-pay" style="background:var(--input-bg);color:var(--text-main);border:1.5px solid var(--glass-border);border-radius:8px;padding:10px;width:100%;font-weight:700;">
+                              <option value="naqd">💵 Naqd</option>
+                              <option value="plastik">💳 Plastik</option>
+                              <option value="nasiya">📋 Nasiya (qarzdor)</option>
                           </select>
                       </div>
-                      <button onclick="makeMgrSale()" class="btn" style="width:100%;padding:12px;font-size:14px;font-weight:800;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;border:none;border-radius:10px;cursor:pointer;"><i class="fa-solid fa-paper-plane"></i> Sotishni Tasdiqlash</button>
+
+                      <button onclick="submitMgrInvoice()" style="width:100%;padding:13px;font-size:14px;font-weight:800;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.35);display:flex;align-items:center;justify-content:center;gap:8px;">
+                          <i class="fa-solid fa-file-invoice"></i> Faktura Yaratish va Yuborish
+                      </button>
                   </div>
+
+                  <!-- ==== O'NG: Tarix ==== -->
                   <div class="glass-card" style="border-radius:16px;padding:18px;">
-                      <div style="font-size:13px;font-weight:800;margin-bottom:12px;">Sotuv Tarixi</div>
-                      <table style="width:100%;border-collapse:collapse;">
-                          <thead><tr style="background:rgba(168,85,247,0.08);font-size:11px;font-weight:800;color:var(--text-muted);">
-                              <th style="padding:7px 10px;text-align:left;">Sana</th>
-                              <th style="padding:7px 10px;text-align:left;">Diller</th>
-                              <th style="padding:7px 10px;text-align:left;">Tovar</th>
-                              <th style="padding:7px 10px;text-align:right;">Dona</th>
-                              <th style="padding:7px 10px;text-align:right;">Summa</th>
-                              <th style="padding:7px 10px;text-align:left;">To'lov</th>
-                          </tr></thead>
-                          <tbody id="mgr-sales-body"></tbody>
-                      </table>
+                      <div style="font-size:13px;font-weight:800;margin-bottom:12px;">Fakturalar Tarixi</div>
+                      <div id="mgr-invoices-list"></div>
                   </div>
               </div>
           </div>
       </div>
 
       <div id="mgr-report" class="view-section">
-          <div style="padding:16px;">
+          <div>
               <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-chart-bar" style="color:#a855f7;"></i> Menejer Hisoboti</div>
               <div id="mgr-report-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;"></div>
               <!-- Donut chart: diller bo'yicha sotuv -->
@@ -1904,7 +2072,9 @@
           { id: 'D-001', name: 'Andijon Diler', phone: '+998 93 123 45 67', region: 'Andijon', debt: 0 },
           { id: 'D-002', name: 'Namangan Optom', phone: '+998 91 234 56 78', region: 'Namangan', debt: 0 }
       ],
-      managerSales: []
+      managerSales: [],
+      mgrInvoices: [],
+      dillerPayments: []  // diller to'lovlari jurnali
   };
 
   // ===== LOCALSTORAGE: avtomatik saqlash va yuklash =====
@@ -1920,7 +2090,7 @@
           // Faqat muhim massivlarni yuklash (default ma'lumotlarni saqlab)
           const keys = ['seryoOmbori','shampunTurlari','shampunlarSkladi','varkas','sales',
               'partners','spisaniyaArchive','laboratoryArchive','kirimTarixi',
-              'kurs','transfers','shopInventory','shopSales','dillers','managerSales','openVendors'];
+              'kurs','transfers','shopInventory','shopSales','dillers','managerSales','mgrInvoices','dillerPayments','openVendors'];
           keys.forEach(k => { if(data[k] !== undefined) appState[k] = data[k]; });
       } catch(e) {}
   }
@@ -1947,19 +2117,19 @@
           'shop-warehouse': 'Dokon Ombori',
           'shop-sales': 'Dokon Sotuv',
           'shop-report': 'Dokon Hisoboti',
-          'mgr-overview': 'Menejer — Umumiy Ko\'rinish',
+          'mgr-data': 'Ma\'lumotlar Oynasi',
           'mgr-dillers': 'Dillerlar Ro\'yxati',
           'mgr-sales': 'Dillerlarga Sotuv',
           'mgr-report': 'Menejer Hisoboti'
       }, titles);
       if(allTitles[viewId]) document.getElementById('page-title').innerText = allTitles[viewId];
-      let contentEl = document.querySelector('.content');
+      let contentEl = document.querySelector('.main-container');
       if(contentEl) contentEl.scrollTop = 0;
       syncMobileNav(viewId);
       if(['warehouse','production','procurement','sales','sarflash'].includes(viewId)) renderAll();
       if(viewId === 'analytics') renderAnalytics();
       if(['shop-warehouse','shop-sales','shop-report'].includes(viewId)) renderShopViews();
-      if(['mgr-overview','mgr-dillers','mgr-sales','mgr-report'].includes(viewId)) renderMgrViews();
+      if(['mgr-data','mgr-dillers','mgr-sales','mgr-report'].includes(viewId)) renderMgrViews();
   }
 
   function switchTab(tabId, btn) {
@@ -2182,6 +2352,16 @@
   }
   function closeBrendModal() {
       document.getElementById('brend-modal').classList.remove('show');
+  }
+
+  function fmtInput(el) {
+      let raw = el.value.replace(/\D/g,'');
+      el.dataset.raw = raw;
+      if(raw==='') { el.value=''; return; }
+      el.value = parseInt(raw,10).toLocaleString('ru-RU');
+  }
+  function fmtVal(el) {
+      return parseFloat((el.dataset.raw||el.value.replace(/\s/g,'')).replace(/[^\d.]/g,''))||0;
   }
 
   function showToast(msg, type='info', duration=3000) {
@@ -2970,12 +3150,14 @@
       let recLower = (rec || '').toLowerCase();
       if(recLower.includes('dokon') || recLower.includes('menejer') || recLower.includes('manager') || recLower.includes('diler')) {
           let toWho = recLower.includes('dokon') ? 'shop' : 'manager';
+          let brand = appState.shampunTurlari.find(b => b.name === item.name);
           appState.transfers.push({
               id: 'TR-' + Date.now().toString().slice(-6),
               date: today, to: toWho,
               itemName: item.name, pack: item.pack,
               qty, unitCostUZS: unitCost, salePriceUZS: unitPrice,
-              note: 'Sotish bo\'limidan', status: 'pending', receivedQty: 0
+              note: 'Sotish bo\'limidan', status: 'pending', receivedQty: 0,
+              img: brand ? brand.img : null
           });
       }
       alert("Chiqim tasdiqlandi!");
@@ -3916,7 +4098,7 @@
       // Birinchi menyuga o'tish
       if(p === 'factory') { renderAll(); switchView('warehouse'); }
       else if(p === 'shop') { switchView('shop-warehouse'); renderShopViews(); }
-      else if(p === 'manager') { switchView('mgr-overview'); renderMgrViews(); }
+      else if(p === 'manager') { switchView('mgr-data'); renderMgrViews(); }
   }
 
   function logoutProfile() {
@@ -3995,32 +4177,43 @@
       if(!el) return;
       let pending = appState.transfers.filter(t => t.to === 'shop' && t.status === 'pending');
       if(!pending.length) { el.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:12px 0;">Hozircha kutilayotgan tovar yo'q</div>`; return; }
-      el.innerHTML = pending.map(t => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-              <div>
+      el.innerHTML = pending.map(t => {
+          let imgHtml = t.img
+              ? `<img src="${t.img}" style="width:52px;height:52px;object-fit:contain;border-radius:10px;border:1.5px solid rgba(245,158,11,0.3);flex-shrink:0;">`
+              : '';
+          return `<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);margin-bottom:10px;">
+              ${imgHtml}
+              <div style="flex:1;min-width:0;">
                   <div style="font-size:14px;font-weight:800;color:var(--text-main);">📦 ${t.itemName} — ${t.pack}</div>
-                  <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${t.date} · ${t.qty} dona · Sotuv narhi: ${t.salePriceUZS.toLocaleString()} UZS/dona${t.note?' · '+t.note:''}</div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${t.date} · ${t.qty} dona · ${t.salePriceUZS.toLocaleString()} UZS/dona${t.note?' · '+t.note:''}</div>
               </div>
-              <button onclick="acceptTransfer('${t.id}','shop')" style="padding:8px 16px;border:none;border-radius:9px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:800;font-size:12px;cursor:pointer;"><i class="fa-solid fa-check"></i> Qabul qilish</button>
-          </div>`).join('');
+              <button onclick="acceptTransfer('${t.id}','shop')" style="padding:8px 16px;border:none;border-radius:9px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:800;font-size:12px;cursor:pointer;flex-shrink:0;"><i class="fa-solid fa-check"></i> Qabul qilish</button>
+          </div>`;
+      }).join('');
   }
 
   function renderShopInventory() {
       let el = document.getElementById('shop-inventory-list');
       if(!el) return;
-      if(!appState.shopInventory.length) { el.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:12px 0;">Ombor bo'sh</div>`; return; }
-      el.innerHTML = `<table style="width:100%;border-collapse:collapse;">
-          <thead><tr style="font-size:11px;font-weight:800;color:var(--text-muted);background:rgba(16,185,129,0.07);">
-              <th style="padding:7px 10px;text-align:left;">Mahsulot</th>
-              <th style="padding:7px 10px;text-align:right;">Qoldiq</th>
-              <th style="padding:7px 10px;text-align:right;">Sotuv Narhi</th>
-          </tr></thead>
-          <tbody>${appState.shopInventory.map(it => `<tr>
-              <td style="padding:7px 10px;font-size:13px;font-weight:700;">${it.name} <span style="color:var(--text-muted);font-size:11px;">${it.pack}</span></td>
-              <td style="padding:7px 10px;text-align:right;font-weight:900;color:#10b981;">${it.qty} dona</td>
-              <td style="padding:7px 10px;text-align:right;font-size:12px;">${it.salePriceUZS.toLocaleString()} UZS</td>
-          </tr>`).join('')}</tbody>
-      </table>`;
+      let items = appState.shopInventory.filter(it => it.qty > 0);
+      if(!items.length) { el.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:20px 0;grid-column:1/-1;">Ombor bo'sh</div>`; return; }
+      el.innerHTML = items.map(it => {
+          let stockBadge, badgeCls;
+          if(it.qty === 0)      { stockBadge = "Tugagan";   badgeCls = "out-stock"; }
+          else if(it.qty < 5)   { stockBadge = "Kam Qoldiq"; badgeCls = "low-stock"; }
+          else                  { stockBadge = "Mavjud";    badgeCls = "in-stock"; }
+          let imgHtml = it.img
+              ? `<img src="${it.img}" style="width:100%;height:150px;object-fit:contain;border-radius:12px;margin-bottom:8px;background:rgba(16,185,129,0.04);">`
+              : `<div class="fin-card-icon" style="width:100%;height:150px;font-size:48px;margin-bottom:8px;">🧴</div>`;
+          return `<div class="fin-card">
+              ${imgHtml}
+              <span class="fin-card-stock-badge ${badgeCls}">${stockBadge}</span>
+              <div class="fin-card-name">${it.name}</div>
+              <div class="fin-card-pack">${it.pack}</div>
+              <div class="fin-card-qty">${it.qty} <span style="font-size:14px;font-weight:600;color:var(--text-muted);">dona</span></div>
+              <div style="font-size:12px;font-weight:700;color:#2563eb;background:rgba(37,99,235,0.08);border-radius:8px;padding:4px 10px;text-align:center;">${it.salePriceUZS.toLocaleString()} UZS</div>
+          </div>`;
+      }).join('');
   }
 
   function acceptTransfer(id, who) {
@@ -4029,12 +4222,12 @@
       tr.status = 'received';
       if(who === 'shop') {
           let existing = appState.shopInventory.find(x => x.name === tr.itemName && x.pack === tr.pack && x.salePriceUZS === tr.salePriceUZS);
-          if(existing) existing.qty += tr.qty;
-          else appState.shopInventory.push({ name: tr.itemName, pack: tr.pack, qty: tr.qty, salePriceUZS: tr.salePriceUZS, unitCostUZS: tr.unitCostUZS });
+          if(existing) { existing.qty += tr.qty; if(tr.img && !existing.img) existing.img = tr.img; }
+          else appState.shopInventory.push({ name: tr.itemName, pack: tr.pack, qty: tr.qty, salePriceUZS: tr.salePriceUZS, unitCostUZS: tr.unitCostUZS, img: tr.img||null });
       } else {
           let existing = appState.shopInventory.find(x => x.name === tr.itemName && x.pack === tr.pack);
-          if(existing) { existing.qty += tr.qty; existing.salePriceUZS = tr.salePriceUZS; }
-          else appState.shopInventory.push({ name: tr.itemName, pack: tr.pack, qty: tr.qty, salePriceUZS: tr.salePriceUZS, unitCostUZS: tr.unitCostUZS });
+          if(existing) { existing.qty += tr.qty; existing.salePriceUZS = tr.salePriceUZS; if(tr.img && !existing.img) existing.img = tr.img; }
+          else appState.shopInventory.push({ name: tr.itemName, pack: tr.pack, qty: tr.qty, salePriceUZS: tr.salePriceUZS, unitCostUZS: tr.unitCostUZS, img: tr.img||null });
       }
       saveState();
       showToast(`✅ ${tr.qty} dona ${tr.itemName} qabul qilindi!`);
@@ -4111,120 +4304,142 @@
   // MENEJER VIEWLARI
   // ============================================================
   function renderMgrViews() {
-      renderMgrPending();
-      renderMgrOverviewStats();
+      renderMgrData();
       renderDillerList();
       renderMgrSaleSelects();
       renderMgrSalesHistory();
+      renderMgrInvoicesList();
       renderMgrReport();
   }
 
-  function renderMgrPending() {
-      let el = document.getElementById('mgr-pending-list');
-      if(!el) return;
-      let pending = appState.transfers.filter(t => t.to === 'manager' && t.status === 'pending');
-      if(!pending.length) { el.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:12px 0;">Hozircha kutilayotgan tovar yo'q</div>`; return; }
-      el.innerHTML = pending.map(t => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-              <div>
-                  <div style="font-size:14px;font-weight:800;color:var(--text-main);">📦 ${t.itemName} — ${t.pack}</div>
-                  <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${t.date} · ${t.qty} dona · Sotuv narhi: ${t.salePriceUZS.toLocaleString()} UZS/dona${t.note?' · '+t.note:''}</div>
+  function renderMgrData() {
+      // --- STAT KARTOCHKALAR ---
+      let statsEl = document.getElementById('mgr-data-stats');
+      if(statsEl) {
+          let totalSales = appState.managerSales.reduce((s,x)=>s+x.total,0);
+          let totalDillers = appState.dillers.length;
+          let totalDebt = appState.dillers.reduce((s,d)=>s+d.debt,0);
+          let todaySales = appState.managerSales.filter(x=>x.date===new Date().toISOString().split('T')[0]).reduce((s,x)=>s+x.total,0);
+          let pendingCount = appState.transfers.filter(t=>t.to==='manager'&&t.status==='pending').length;
+          let omborQoldiq = appState.shopInventory.reduce((s,x)=>s+x.qty,0);
+          let cards = [
+              {icon:'fa-people-group',color:'#a855f7',bg:'#f3e8ff',label:'Dillerlar',val:totalDillers+' ta',nav:'mgr-dillers'},
+              {icon:'fa-sack-dollar',color:'#10b981',bg:'#d1fae5',label:'Jami Sotuv',val:totalSales.toLocaleString()+' UZS',nav:'mgr-report'},
+              {icon:'fa-bolt',color:'#3b82f6',bg:'#dbeafe',label:'Bugungi Sotuv',val:todaySales.toLocaleString()+' UZS',nav:'mgr-sales'},
+              {icon:'fa-triangle-exclamation',color:'#ef4444',bg:'#fee2e2',label:'Umumiy Qarz',val:totalDebt.toLocaleString()+' UZS',nav:'mgr-dillers'},
+              {icon:'fa-boxes-stacking',color:'#f59e0b',bg:'#fef3c7',label:'Ombor Qoldiq',val:omborQoldiq+' dona',nav:'mgr-data'},
+              {icon:'fa-clock',color:'#06b6d4',bg:'#cffafe',label:'Kutilayotgan',val:pendingCount+' ta',nav:'mgr-data'},
+          ];
+          statsEl.innerHTML = cards.map(s=>`
+            <div onclick="switchView('${s.nav}')" style="border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;
+                background:var(--glass-bg);border:1px solid var(--glass-border);box-shadow:0 2px 10px rgba(0,0,0,0.05);
+                transition:all .18s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+              <div style="width:46px;height:46px;border-radius:12px;background:${s.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i class="fa-solid ${s.icon}" style="color:${s.color};font-size:20px;"></i>
               </div>
-              <button onclick="acceptTransfer('${t.id}','manager')" style="padding:8px 16px;border:none;border-radius:9px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:800;font-size:12px;cursor:pointer;"><i class="fa-solid fa-check"></i> Qabul qilish</button>
-          </div>`).join('');
-  }
+              <div style="min-width:0;flex:1;">
+                  <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;">${s.label}</div>
+                  <div style="font-size:15px;font-weight:900;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.val}</div>
+              </div>
+            </div>`).join('');
+      }
 
-  function renderMgrOverviewStats() {
-      let el = document.getElementById('mgr-overview-stats');
-      if(!el) return;
-      let totalSales = appState.managerSales.reduce((s,x) => s+x.total, 0);
-      let totalDillers = appState.dillers.length;
-      let totalDebt = appState.dillers.reduce((s,d) => s+d.debt, 0);
-      let todaySales = appState.managerSales.filter(x=>x.date===new Date().toISOString().split('T')[0]).reduce((s,x)=>s+x.total,0);
-      let pendingCount = appState.transfers.filter(t=>t.to==='manager'&&t.status==='pending').length;
-      let omborQoldiq = appState.shopInventory.reduce((s,x)=>s+x.qty,0);
-      let cards = [
-          { icon:'fa-people-group', color:'#a855f7', bg:'#f3e8ff', label:'Dillerlar', val: totalDillers+' ta', nav:'mgr-dillers', hint:'Dillerlar ro\'yxati' },
-          { icon:'fa-sack-dollar', color:'#10b981', bg:'#d1fae5', label:'Jami Sotuv', val: totalSales.toLocaleString()+' UZS', nav:'mgr-report', hint:'Sotuv hisoboti' },
-          { icon:'fa-bolt', color:'#3b82f6', bg:'#dbeafe', label:'Bugungi Sotuv', val: todaySales.toLocaleString()+' UZS', nav:'mgr-sales', hint:'Sotuvlar' },
-          { icon:'fa-triangle-exclamation', color:'#ef4444', bg:'#fee2e2', label:'Umumiy Qarz', val: totalDebt.toLocaleString()+' UZS', nav:'mgr-dillers', hint:'Qarzdorlar' },
-          { icon:'fa-boxes-stacking', color:'#f59e0b', bg:'#fef3c7', label:'Ombor Qoldiq', val: omborQoldiq+' dona', nav:'shop-warehouse', hint:'Ombor holati' },
-          { icon:'fa-clock', color:'#06b6d4', bg:'#cffafe', label:'Kutilayotgan', val: pendingCount+' ta', nav:'mgr-overview', hint:'Zavoddan kutilmoqda' },
-      ];
-      el.innerHTML = cards.map(s => `
-        <div onclick="switchView('${s.nav}')" style="border-radius:16px;padding:18px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;
-            background:var(--glass-bg);border:1px solid var(--glass-border);
-            box-shadow:0 2px 12px rgba(0,0,0,0.06);
-            transition:all .18s cubic-bezier(.34,1.56,.64,1);"
-            onmouseover="this.style.transform='translateY(-4px) scale(1.02)';this.style.boxShadow='0 8px 28px rgba(0,0,0,0.13)'"
-            onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
-          <div style="width:52px;height:52px;border-radius:14px;background:${s.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <i class="fa-solid ${s.icon}" style="color:${s.color};font-size:22px;"></i>
-          </div>
-          <div style="min-width:0;flex:1;">
-              <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">${s.label}</div>
-              <div style="font-size:17px;font-weight:900;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.val}</div>
-              <div style="font-size:10px;color:${s.color};margin-top:2px;font-weight:600;">→ ${s.hint}</div>
-          </div>
-        </div>`).join('');
-      // Line chart
-      renderMgrLineChart();
-  }
+      // --- BARCHA FAKTURALAR ---
+      let invBody = document.getElementById('mgr-data-inv-body');
+      let invCount = document.getElementById('mgr-data-inv-count');
+      if(invBody) {
+          let invs = (appState.mgrInvoices||[]).slice().reverse();
+          if(invCount) invCount.textContent = invs.length+' ta';
+          if(!invs.length) {
+              invBody.innerHTML = `<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--text-muted);font-size:13px;">Hali faktura yo'q</td></tr>`;
+          } else {
+              invBody.innerHTML = invs.map((inv,i)=>{
+                  let items = (inv.items||[]).map(it=>`${it.name} x${it.qty}`).join(', ');
+                  let paid = inv.paid||0;
+                  let rest = (inv.total||0)-paid;
+                  let holat = rest<=0
+                      ? `<span style="background:#d1fae5;color:#059669;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;">To'landi</span>`
+                      : `<span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;">Qarz: ${rest.toLocaleString()}</span>`;
+                  let rowBg = i%2===0 ? '' : 'background:rgba(168,85,247,0.03);';
+                  return `<tr style="${rowBg}border-bottom:1px solid var(--glass-border);">
+                      <td style="padding:9px 10px;color:var(--text-muted);font-size:11px;">${inv.date||''}</td>
+                      <td style="padding:9px 10px;font-weight:800;color:var(--text-main);">${inv.dillerName||inv.diller||'—'}</td>
+                      <td style="padding:9px 10px;color:var(--text-muted);font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${items}</td>
+                      <td style="padding:9px 10px;text-align:right;font-weight:800;color:#a855f7;">${(inv.total||0).toLocaleString()}</td>
+                      <td style="padding:9px 10px;text-align:right;font-weight:700;color:#10b981;">${paid.toLocaleString()}</td>
+                      <td style="padding:9px 10px;text-align:right;font-weight:700;color:${rest>0?'#ef4444':'#10b981'};">${rest.toLocaleString()}</td>
+                      <td style="padding:9px 10px;text-align:center;">${holat}</td>
+                  </tr>`;
+              }).join('');
+          }
+      }
 
-  function renderMgrLineChart() {
-      let svg = document.getElementById('mgr-line-svg'); if(!svg) return;
-      // So'nggi 7 kun
-      let days = [];
-      for(let i=6;i>=0;i--) {
-          let d = new Date(); d.setDate(d.getDate()-i);
-          days.push(d.toISOString().split('T')[0]);
+      // --- DILLERLAR VA QARZLAR ---
+      let dBody = document.getElementById('mgr-data-dillers-body');
+      if(dBody) {
+          if(!appState.dillers.length) {
+              dBody.innerHTML = `<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text-muted);font-size:13px;">Diller yo'q</td></tr>`;
+          } else {
+              dBody.innerHTML = appState.dillers.map((d,i)=>{
+                  let dillerInvs = (appState.mgrInvoices||[]).filter(inv=>(inv.dillerId===d.id)||(inv.dillerName===d.name));
+                  let jamiZakaz = dillerInvs.reduce((s,inv)=>s+(inv.total||0),0);
+                  let tolangan = dillerInvs.reduce((s,inv)=>s+(inv.paid||0),0);
+                  let rowBg = i%2===0?'':'background:rgba(37,99,235,0.03);';
+                  return `<tr style="${rowBg}border-bottom:1px solid var(--glass-border);">
+                      <td style="padding:9px 10px;color:var(--text-muted);font-size:11px;font-weight:700;">${i+1}</td>
+                      <td style="padding:9px 10px;font-weight:900;color:var(--text-main);">${d.name}</td>
+                      <td style="padding:9px 10px;color:var(--text-muted);">${d.phone||'—'}</td>
+                      <td style="padding:9px 10px;text-align:right;font-weight:800;color:#2563eb;">${jamiZakaz.toLocaleString()} UZS</td>
+                      <td style="padding:9px 10px;text-align:right;font-weight:700;color:#10b981;">${tolangan.toLocaleString()} UZS</td>
+                      <td style="padding:9px 10px;text-align:right;font-weight:900;color:${d.debt>0?'#ef4444':'#10b981'};">${(d.debt||0).toLocaleString()} UZS</td>
+                  </tr>`;
+              }).join('');
+          }
       }
-      let vals = days.map(d => appState.managerSales.filter(s=>s.date===d).reduce((sum,s)=>sum+s.total,0));
-      let maxVal = Math.max(...vals, 1);
-      const W=700, H=180, PL=50, PR=20, PT=20, PB=40;
-      const cw=W-PL-PR, ch=H-PT-PB;
-      let xs = days.map((_,i)=>PL + (i/(days.length-1||1))*cw);
-      let ys = vals.map(v=>PT+ch-(v/maxVal)*ch);
-      // Grid lines
-      let grid='', labels='';
-      for(let i=0;i<=4;i++) {
-          let y=PT+ch-(i/4)*ch;
-          let v=Math.round((maxVal*i/4)/1000);
-          grid+=`<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(168,85,247,0.12)" stroke-width="1" stroke-dasharray="4,4"/>`;
-          labels+=`<text x="${PL-6}" y="${y+4}" text-anchor="end" font-size="9" fill="var(--text-muted)" font-weight="600">${v}K</text>`;
+
+      // --- KUTILAYOTGAN TOVARLAR ---
+      let pendEl = document.getElementById('mgr-data-pending');
+      let pendCount = document.getElementById('mgr-data-pend-count');
+      if(pendEl) {
+          let pending = appState.transfers.filter(t=>t.to==='manager'&&t.status==='pending');
+          if(pendCount) pendCount.textContent = pending.length+' ta';
+          if(!pending.length) {
+              pendEl.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:8px 0;">Hozircha kutilayotgan tovar yo'q</div>`;
+          } else {
+              pendEl.innerHTML = pending.map(t=>`
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                      <div>
+                          <div style="font-size:13px;font-weight:800;color:var(--text-main);">📦 ${t.itemName} — ${t.pack}</div>
+                          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${t.date} · ${t.qty} dona · ${t.salePriceUZS.toLocaleString()} UZS/dona${t.note?' · '+t.note:''}</div>
+                      </div>
+                      <button onclick="acceptTransfer('${t.id}','manager')" style="padding:7px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:800;font-size:12px;cursor:pointer;flex-shrink:0;"><i class="fa-solid fa-check"></i> Qabul</button>
+                  </div>`).join('');
+          }
       }
-      // Area fill (gradient)
-      let pathD = xs.map((x,i)=>(i===0?`M${x},${ys[i]}`:`L${x},${ys[i]}`)).join(' ');
-      let areaD = pathD+` L${xs[xs.length-1]},${PT+ch} L${xs[0]},${PT+ch} Z`;
-      // Smooth bezier path
-      let smooth='';
-      for(let i=0;i<xs.length;i++) {
-          if(i===0) { smooth=`M${xs[0].toFixed(1)},${ys[0].toFixed(1)}`; continue; }
-          let cpx1=(xs[i-1]+xs[i])/2, cpy1=ys[i-1];
-          let cpx2=(xs[i-1]+xs[i])/2, cpy2=ys[i];
-          smooth+=` C${cpx1.toFixed(1)},${cpy1.toFixed(1)} ${cpx2.toFixed(1)},${cpy2.toFixed(1)} ${xs[i].toFixed(1)},${ys[i].toFixed(1)}`;
+
+      // --- SOTUV TARIXI ---
+      let sBody = document.getElementById('mgr-data-sales-body');
+      if(sBody) {
+          let sales = (appState.managerSales||[]).slice().reverse();
+          if(!sales.length) {
+              sBody.innerHTML = `<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text-muted);font-size:13px;">Hali sotuv yo'q</td></tr>`;
+          } else {
+              sBody.innerHTML = sales.map((s,i)=>{
+                  let payBadge = s.payType==='naqd'
+                      ? `<span style="background:#d1fae5;color:#059669;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;">Naqd</span>`
+                      : `<span style="background:#dbeafe;color:#2563eb;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;">Kredit</span>`;
+                  let rowBg = i%2===0?'':'background:rgba(16,185,129,0.03);';
+                  return `<tr style="${rowBg}border-bottom:1px solid var(--glass-border);">
+                      <td style="padding:8px 10px;color:var(--text-muted);font-size:11px;">${s.date||''}</td>
+                      <td style="padding:8px 10px;font-weight:800;color:var(--text-main);">${s.diller||s.dillerName||'—'}</td>
+                      <td style="padding:8px 10px;color:var(--text-muted);">${s.itemName||'—'}</td>
+                      <td style="padding:8px 10px;text-align:right;font-weight:700;">${s.qty||0}</td>
+                      <td style="padding:8px 10px;text-align:right;font-weight:800;color:#a855f7;">${(s.total||0).toLocaleString()}</td>
+                      <td style="padding:8px 10px;text-align:center;">${payBadge}</td>
+                  </tr>`;
+              }).join('');
+          }
       }
-      let smoothArea=smooth+` L${xs[xs.length-1]},${PT+ch} L${xs[0]},${PT+ch} Z`;
-      // Day labels
-      let dayLabels=days.map((d,i)=>{
-          let short=d.slice(5).replace('-','/');
-          return `<text x="${xs[i]}" y="${H-8}" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text-muted)">${short}</text>`;
-      }).join('');
-      // Dots + value labels
-      let dots=xs.map((x,i)=>`
-          <circle cx="${x}" cy="${ys[i]}" r="4" fill="#a855f7" stroke="#fff" stroke-width="2"/>
-          ${vals[i]>0?`<text x="${x}" y="${ys[i]-10}" text-anchor="middle" font-size="9" font-weight="800" fill="#a855f7">${Math.round(vals[i]/1000)}K</text>`:''}
-      `).join('');
-      svg.innerHTML=`<defs>
-          <linearGradient id="mgLineGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#a855f7" stop-opacity="0.25"/>
-              <stop offset="100%" stop-color="#a855f7" stop-opacity="0.02"/>
-          </linearGradient>
-      </defs>
-      ${grid}${labels}${dayLabels}
-      <path d="${smoothArea}" fill="url(#mgLineGrad)"/>
-      <path d="${smooth}" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      ${dots}`;
   }
 
   function openDillerModal() {
@@ -4252,161 +4467,671 @@
   function openDillerDetail(idx) {
       let d = appState.dillers[idx];
       if(!d) return;
-      // Bu dillerga tegishli sotuvlar
-      let sales = appState.managerSales.filter(s => s.dillerName === d.name);
-      // Sana bo'yicha guruhla
-      let byDate = {};
-      sales.forEach(s => { if(!byDate[s.date]) byDate[s.date]=[]; byDate[s.date].push(s); });
-      let datesHtml = Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date => {
-          let rows = byDate[date];
-          let dayTotal = rows.reduce((s,r)=>s+r.total,0);
-          let rowsHtml = rows.map(r => `
-            <tr>
-              <td style="padding:9px 10px;font-size:13px;font-weight:700;color:var(--text-main);">${r.itemName||'—'}</td>
-              <td style="padding:9px 10px;font-size:12px;color:var(--text-muted);text-align:center;">${r.qty||1} dona</td>
-              <td style="padding:9px 10px;font-size:12px;color:#f59e0b;text-align:right;">${(r.unitCost||0).toLocaleString()} UZS</td>
-              <td style="padding:9px 10px;font-size:12px;color:#10b981;text-align:right;">${(r.price||r.total||0).toLocaleString()} UZS</td>
-              <td style="padding:9px 10px;font-size:13px;font-weight:800;color:var(--text-main);text-align:right;">${(r.total||0).toLocaleString()} UZS</td>
-            </tr>`).join('');
-          return `
-            <div style="margin-bottom:18px;">
-              <div style="font-size:12px;font-weight:800;color:#a855f7;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
-                <i class="fa-solid fa-calendar-day"></i> ${date}
-                <span style="margin-left:auto;font-size:11px;color:var(--text-muted);font-weight:600;">Kun jami: <b style="color:var(--text-main);">${dayTotal.toLocaleString()} UZS</b></span>
-              </div>
-              <table style="width:100%;border-collapse:collapse;background:rgba(168,85,247,0.04);border-radius:12px;overflow:hidden;">
-                <thead>
-                  <tr style="background:rgba(168,85,247,0.1);">
-                    <th style="padding:8px 10px;font-size:10px;color:var(--text-muted);text-align:left;font-weight:700;">TOVAR NOMI</th>
-                    <th style="padding:8px 10px;font-size:10px;color:var(--text-muted);text-align:center;font-weight:700;">MIQDOR</th>
-                    <th style="padding:8px 10px;font-size:10px;color:var(--text-muted);text-align:right;font-weight:700;">TANNARH</th>
-                    <th style="padding:8px 10px;font-size:10px;color:var(--text-muted);text-align:right;font-weight:700;">NARH</th>
-                    <th style="padding:8px 10px;font-size:10px;color:var(--text-muted);text-align:right;font-weight:700;">JAMI</th>
-                  </tr>
-                </thead>
-                <tbody>${rowsHtml}</tbody>
-              </table>
-            </div>`;
-      }).join('') || `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Hali sotuv amalga oshirilmagan</div>`;
+      let allSales = appState.managerSales.filter(s => (s.diller||s.dillerName) === d.name);
 
-      let totalSold = sales.reduce((s,r)=>s+r.total,0);
+      let totalSold  = allSales.reduce((s,r)=>s+r.total,0);
+      let totalDona  = allSales.reduce((s,r)=>s+(parseInt(r.qty)||0),0);
+      let allDates   = allSales.map(s=>s.date).sort();
+      let minDate    = allDates[0]||'';
+      let maxDate    = allDates[allDates.length-1]||'';
+      let partCount  = Object.keys(allSales.reduce((a,s)=>{a[s.date]=1;return a},{})).length;
+
       document.getElementById('diller-detail-content').innerHTML = `
-        <!-- Sarlavha -->
-        <div style="padding:24px 28px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-          <div style="display:flex;align-items:center;gap:14px;">
-            <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#a855f7,#7c3aed);display:flex;align-items:center;justify-content:center;">
-              <i class="fa-solid fa-user" style="color:#fff;font-size:22px;"></i>
+        <!-- ===== TOPBAR ===== -->
+        <div style="padding:18px 28px;border-bottom:2px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#f8fafc;border-radius:16px 16px 0 0;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;box-shadow:0 6px 18px rgba(37,99,235,0.3);flex-shrink:0;">
+              ${d.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <div style="font-size:20px;font-weight:900;color:var(--text-main);">${d.name}</div>
-              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
-                ${d.phone||'—'} · ${d.region||'—'}
-                ${d.comment?`<span style="margin-left:8px;color:#a855f7;">${d.comment}</span>`:''}
+              <div style="font-size:22px;font-weight:900;color:#1e293b;line-height:1.2;">${d.name}</div>
+              <div style="display:flex;gap:14px;margin-top:4px;flex-wrap:wrap;">
+                <span style="font-size:12px;color:#64748b;"><i class="fa-solid fa-phone" style="color:#2563eb;margin-right:4px;font-size:10px;"></i>${d.phone||'—'}</span>
+                <span style="font-size:12px;color:#64748b;"><i class="fa-solid fa-location-dot" style="color:#2563eb;margin-right:4px;font-size:10px;"></i>${d.region||'—'}</span>
+                ${d.comment?`<span style="font-size:12px;color:#2563eb;"><i class="fa-solid fa-comment" style="margin-right:4px;font-size:10px;"></i>${d.comment}</span>`:''}
               </div>
             </div>
           </div>
-          <button onclick="document.getElementById('diller-detail-modal').style.display='none'" style="border:none;background:rgba(0,0,0,0.08);border-radius:12px;padding:8px 16px;cursor:pointer;font-weight:700;color:var(--text-muted);">✕ Yopish</button>
-        </div>
-
-        <!-- Stat qatorlar -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--glass-border);">
-          <div style="padding:18px 20px;border-right:1px solid var(--glass-border);">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;">Jami Sotuv</div>
-            <div style="font-size:18px;font-weight:900;color:#10b981;margin-top:4px;">${totalSold.toLocaleString()} UZS</div>
-          </div>
-          <div style="padding:18px 20px;border-right:1px solid var(--glass-border);">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;">Buyurtmalar</div>
-            <div style="font-size:18px;font-weight:900;color:#3b82f6;margin-top:4px;">${sales.length} ta</div>
-          </div>
-          <div style="padding:18px 20px;">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;">Qarzdorlik</div>
-            <div style="font-size:18px;font-weight:900;color:${d.debt>0?'#ef4444':'#10b981'};margin-top:4px;">${d.debt.toLocaleString()} UZS</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="openPaymentModal(${idx})" style="padding:10px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(22,163,74,0.35);">
+              <i class="fa-solid fa-money-bill-wave"></i> To'lov Qabul
+            </button>
+            <button onclick="printDillerNakladnoy(${idx})" style="padding:10px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+              <i class="fa-solid fa-print"></i> Hammasi Chop
+            </button>
+            <button onclick="document.getElementById('diller-detail-modal').style.display='none'" style="border:none;background:#e2e8f0;border-radius:10px;width:40px;height:40px;cursor:pointer;font-size:18px;color:#64748b;display:flex;align-items:center;justify-content:center;transition:.15s;" onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">✕</button>
           </div>
         </div>
 
-        <!-- Nakladnoy tugmasi -->
-        <div style="padding:16px 24px;border-bottom:1px solid var(--glass-border);display:flex;justify-content:flex-end;">
-          <button onclick="printDillerNakladnoy(${idx})" style="padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:700;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">
-            <i class="fa-solid fa-print"></i> Nakladnoy Chiqarish
+        <!-- ===== STAT CARDS ===== -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:2px solid #e2e8f0;">
+          ${[
+            {lbl:'Jami Sotuv',  val:totalSold.toLocaleString()+' UZS', color:'#16a34a', bg:'#f0fdf4', icon:'fa-coins'},
+            {lbl:'Jami Dona',   val:totalDona+' dona',                  color:'#2563eb', bg:'#eff6ff', icon:'fa-boxes-stacking'},
+            {lbl:'Partiyalar',  val:partCount+' kun',                   color:'#d97706', bg:'#fffbeb', icon:'fa-calendar-days'},
+            {lbl:'Qarzdorlik',  val:d.debt.toLocaleString()+' UZS',    color:d.debt>0?'#dc2626':'#16a34a', bg:d.debt>0?'#fef2f2':'#f0fdf4', icon:'fa-circle-dollar-to-slot'}
+          ].map((c,i)=>`
+            <div style="padding:18px 24px;background:${c.bg};${i<3?'border-right:1px solid #e2e8f0;':''}">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <i class="fa-solid ${c.icon}" style="color:${c.color};font-size:14px;"></i>
+                <span style="font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;">${c.lbl}</span>
+              </div>
+              <div style="font-size:20px;font-weight:900;color:${c.color};">${c.val}</div>
+            </div>`).join('')}
+        </div>
+
+        <!-- ===== TOOLBAR: filter ===== -->
+        <div style="padding:12px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f8fafc;">
+          <span style="font-size:12px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-calendar-range" style="color:#2563eb;"></i> Sana:</span>
+          <input type="date" id="dd-from" value="${minDate}" style="padding:7px 11px;border-radius:8px;border:1.5px solid #cbd5e1;background:#fff;color:#1e293b;font-size:12px;font-weight:600;">
+          <span style="color:#94a3b8;">—</span>
+          <input type="date" id="dd-to" value="${maxDate}" style="padding:7px 11px;border-radius:8px;border:1.5px solid #cbd5e1;background:#fff;color:#1e293b;font-size:12px;font-weight:600;">
+          <button onclick="applyDillerFilter(${idx})" style="padding:7px 18px;border:none;border-radius:8px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-weight:700;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(37,99,235,0.25);">
+            <i class="fa-solid fa-magnifying-glass"></i> Filtrla
+          </button>
+          <button onclick="document.getElementById('dd-from').value='${minDate}';document.getElementById('dd-to').value='${maxDate}';applyDillerFilter(${idx})" style="padding:7px 14px;border:1.5px solid #cbd5e1;border-radius:8px;background:#fff;color:#64748b;font-size:12px;cursor:pointer;font-weight:600;">
+            Barchasi
           </button>
         </div>
 
-        <!-- Sotuvlar tarixi -->
-        <div style="padding:20px 24px;max-height:55vh;overflow-y:auto;">
-          <div style="font-size:13px;font-weight:800;color:var(--text-main);margin-bottom:14px;"><i class="fa-solid fa-box-open" style="color:#a855f7;margin-right:6px;"></i>Chiqib Ketgan Tovarlar Tarixi</div>
-          ${datesHtml}
+        <!-- ===== INVOICE TABLE HEADER ===== -->
+        <div style="display:grid;grid-template-columns:52px 140px 1fr 130px 160px 120px 100px;align-items:center;padding:10px 24px;border-bottom:2px solid #e2e8f0;background:#f1f5f9;">
+          <div style="font-size:10px;font-weight:800;color:#94a3b8;letter-spacing:0.5px;">#</div>
+          <div style="font-size:10px;font-weight:800;color:#94a3b8;letter-spacing:0.5px;">SANA</div>
+          <div style="font-size:10px;font-weight:800;color:#94a3b8;letter-spacing:0.5px;">TOVAR NOMI</div>
+          <div style="font-size:10px;font-weight:800;color:#2563eb;letter-spacing:0.5px;text-align:center;">DONA</div>
+          <div style="font-size:10px;font-weight:800;color:#16a34a;letter-spacing:0.5px;text-align:right;">SUMMA</div>
+          <div style="font-size:10px;font-weight:800;color:#94a3b8;letter-spacing:0.5px;text-align:center;">TO'LOV</div>
+          <div></div>
+        </div>
+
+        <!-- ===== ROWS ===== -->
+        <div id="diller-history-body" style="overflow-y:auto;flex:1;min-height:300px;background:#fff;"></div>
+
+        <!-- ===== TO'LOVLAR BO'LIMI ===== -->
+        <div style="border-top:3px solid #e2e8f0;">
+          <div style="padding:14px 24px;display:flex;align-items:center;justify-content:space-between;background:#f0fdf4;">
+            <div style="font-size:13px;font-weight:800;color:#16a34a;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-money-bill-wave" style="font-size:16px;"></i> To'lovlar Tarixi
+            </div>
+            <button onclick="openPaymentModal(${idx})" style="padding:7px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-weight:700;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;">
+              <i class="fa-solid fa-plus"></i> Yangi To'lov
+            </button>
+          </div>
+          <div id="diller-payments-body" style="max-height:280px;overflow-y:auto;background:#fff;"></div>
         </div>`;
 
-      let modal = document.getElementById('diller-detail-modal');
-      modal.style.display = 'flex';
+      renderDillerHistory(idx, minDate, maxDate);
+      renderDillerPaymentsBody(idx);
+      document.getElementById('diller-detail-modal').style.display = 'flex';
+  }
+
+  function applyDillerFilter(idx) {
+      renderDillerHistory(idx, document.getElementById('dd-from').value, document.getElementById('dd-to').value);
+      renderDillerPaymentsBody(idx);
+  }
+
+  function renderDillerHistory(idx, fromDate, toDate) {
+      let d = appState.dillers[idx];
+      if(!d) return;
+      let sales = appState.managerSales.filter(s => {
+          if((s.diller||s.dillerName) !== d.name) return false;
+          if(fromDate && s.date < fromDate) return false;
+          if(toDate   && s.date > toDate)   return false;
+          return true;
+      }).slice().sort((a,b) => b.date.localeCompare(a.date) || (b.id||'').localeCompare(a.id||''));
+      let body = document.getElementById('diller-history-body');
+      if(!body) return;
+
+      if(!sales.length) {
+          body.innerHTML = `<div style="text-align:center;padding:80px 20px;color:#94a3b8;">
+            <i class="fa-solid fa-inbox" style="font-size:52px;opacity:0.2;margin-bottom:16px;display:block;"></i>
+            <div style="font-size:15px;font-weight:700;color:#64748b;">Tanlangan davr uchun ma'lumot yo'q</div>
+          </div>`;
+          return;
+      }
+
+      let html = '';
+      sales.forEach((r, i) => {
+          let rowNum = sales.length - i;
+          let rid = 'sr-' + i;
+          let payColor = r.pay==='nasiya' ? '#dc2626' : r.pay==='plastik' ? '#2563eb' : '#16a34a';
+          let payBg    = r.pay==='nasiya' ? '#fef2f2' : r.pay==='plastik' ? '#eff6ff' : '#f0fdf4';
+          let payLabel = r.pay==='nasiya' ? 'Nasiya' : r.pay==='plastik' ? 'Plastik' : 'Naqd';
+          let payBadge = `<span style="padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${payBg};color:${payColor};">${payLabel}</span>`;
+
+          html += `
+          <div style="border-bottom:1px solid #e2e8f0;">
+            <!-- Qator sarlavhasi -->
+            <div onclick="toggleSaleRow('${rid}')" style="display:grid;grid-template-columns:52px 140px 1fr 130px 160px 120px 100px;align-items:center;padding:14px 24px;cursor:pointer;transition:background .12s;user-select:none;" onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background=''">
+              <div style="font-size:13px;font-weight:800;color:#2563eb;">#${rowNum}</div>
+              <div style="font-size:13px;font-weight:700;color:#1e293b;">${r.date}</div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#1e293b;">${r.name||r.itemName||'—'}</div>
+                <div style="font-size:10px;color:#94a3b8;">${r.pack||''}</div>
+              </div>
+              <div style="text-align:center;font-size:15px;font-weight:900;color:#2563eb;">${r.qty||0} <span style="font-size:11px;font-weight:500;color:#64748b;">dona</span></div>
+              <div style="text-align:right;font-size:14px;font-weight:900;color:#16a34a;">${(r.total||0).toLocaleString()} <span style="font-size:10px;font-weight:400;color:#94a3b8;">UZS</span></div>
+              <div style="text-align:center;">${payBadge}</div>
+              <div style="text-align:center;font-size:13px;color:#94a3b8;transition:transform .2s;" id="${rid}-arrow">▼</div>
+            </div>
+            <!-- Kengaygan detail -->
+            <div id="${rid}" style="display:none;background:#f8faff;border-top:1px solid #e2e8f0;">
+              <div style="padding:18px 32px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;">
+                  ${r.img ? `<img src="${r.img}" style="width:52px;height:52px;object-fit:contain;border-radius:8px;border:1px solid #e2e8f0;flex-shrink:0;">` : `<div style="width:52px;height:52px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-box" style="color:#cbd5e1;font-size:20px;"></i></div>`}
+                  <div>
+                    <div style="font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Tovar</div>
+                    <div style="font-size:14px;font-weight:800;color:#1e293b;">${r.name||r.itemName||'—'}</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:2px;">${r.pack||''}</div>
+                  </div>
+                </div>
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+                  <div style="font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:6px;"><i class="fa-solid fa-hashtag" style="color:#2563eb;margin-right:4px;"></i>Miqdor va Narh</div>
+                  <div style="font-size:15px;font-weight:800;color:#2563eb;">${r.qty||0} dona</div>
+                  <div style="font-size:12px;color:#64748b;margin-top:3px;">${(r.price||0).toLocaleString()} UZS/dona</div>
+                </div>
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+                  <div style="font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:6px;"><i class="fa-solid fa-coins" style="color:#16a34a;margin-right:4px;"></i>To'lov</div>
+                  <div style="font-size:15px;font-weight:800;color:#16a34a;">${(r.total||0).toLocaleString()} UZS</div>
+                  <div style="margin-top:4px;"><span style="padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700;background:${payBg};color:${payColor};">${payLabel}</span></div>
+                </div>
+              </div>
+              <div style="padding:0 32px 16px;display:flex;justify-content:flex-end;gap:8px;">
+                <button onclick="printSingleSale(${idx},'${r.id||''}','${r.date}')" style="padding:8px 20px;border:none;border-radius:9px;background:#2563eb;color:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(37,99,235,0.3);">
+                  <i class="fa-solid fa-print"></i> Chek Chop Etish
+                </button>
+              </div>
+            </div>
+          </div>`;
+      });
+
+      body.innerHTML = html;
+  }
+
+  // ===== TO'LOVLAR TIZIMI =====
+  let _paymentDillerIdx = null;
+
+  function openPaymentModal(idx) {
+      _paymentDillerIdx = idx;
+      let d = appState.dillers[idx];
+      if(!d) return;
+      document.getElementById('payment-modal-diller-name').textContent = d.name + (d.region ? ' · ' + d.region : '');
+      document.getElementById('payment-modal-debt-info').innerHTML =
+          `<div style="display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-circle-dollar-to-slot" style="font-size:20px;color:${d.debt>0?'#dc2626':'#16a34a'};"></i>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;">Joriy qarzdorlik</div>
+              <div style="font-size:20px;font-weight:900;color:${d.debt>0?'#dc2626':'#16a34a'};">${d.debt.toLocaleString()} UZS</div>
+            </div>
+          </div>`;
+      let paEl = document.getElementById('pay-amount'); paEl.value=''; paEl.dataset.raw='';
+      document.getElementById('pay-responsible').value = '';
+      document.getElementById('pay-comment').value = '';
+      document.getElementById('pay-img-preview').innerHTML = '';
+      document.getElementById('payment-preview').style.display = 'none';
+      document.getElementById('payment-modal').style.display = 'flex';
+  }
+
+  function updatePaymentPreview() {
+      let amount = fmtVal(document.getElementById('pay-amount'));
+      let prev = document.getElementById('payment-preview');
+      if(!prev || _paymentDillerIdx === null) return;
+      let d = appState.dillers[_paymentDillerIdx];
+      if(!d) return;
+      if(amount <= 0) { prev.style.display = 'none'; return; }
+      let newDebt = d.debt - amount;
+      prev.style.display = 'block';
+      prev.innerHTML = `<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;">
+        <div><div style="font-size:9px;color:#64748b;font-weight:700;">OLDINGI QARZ</div><div style="font-size:16px;font-weight:900;color:#dc2626;">${d.debt.toLocaleString()}</div></div>
+        <div style="font-size:18px;color:#2563eb;">→</div>
+        <div><div style="font-size:9px;color:#64748b;font-weight:700;">YANGI QARZ</div><div style="font-size:16px;font-weight:900;color:${newDebt>0?'#dc2626':'#16a34a'};">${newDebt.toLocaleString()} UZS</div></div>
+      </div>`;
+  }
+
+  function previewPayImg() {
+      let file = document.getElementById('pay-img').files[0];
+      let prev = document.getElementById('pay-img-preview');
+      if(!file || !prev) return;
+      let reader = new FileReader();
+      reader.onload = e => {
+          prev.innerHTML = `<img src="${e.target.result}" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;">`;
+          prev._imgData = e.target.result;
+      };
+      reader.readAsDataURL(file);
+  }
+
+  function confirmPayment() {
+      if(_paymentDillerIdx === null) return;
+      let d = appState.dillers[_paymentDillerIdx];
+      if(!d) return;
+      let amount = fmtVal(document.getElementById('pay-amount'));
+      if(amount <= 0) { showToast('Summa kiriting!', 'danger'); return; }
+      let responsible = document.getElementById('pay-responsible').value.trim();
+      let comment     = document.getElementById('pay-comment').value.trim();
+      let payType     = document.getElementById('pay-type').value;
+      let imgPrev     = document.getElementById('pay-img-preview');
+      let imgData     = (imgPrev && imgPrev._imgData) ? imgPrev._imgData : null;
+      let date  = new Date().toISOString().split('T')[0];
+      let debtBefore = d.debt;
+      d.debt -= amount;
+      let debtAfter = d.debt;
+      let payment = {
+          id: 'PAY-' + Date.now().toString().slice(-7),
+          date, dillerName: d.name,
+          amount, payType, responsible, comment,
+          imgProof: imgData,
+          debtBefore, debtAfter
+      };
+      if(!appState.dillerPayments) appState.dillerPayments = [];
+      appState.dillerPayments.unshift(payment);
+      saveState();
+      document.getElementById('payment-modal').style.display = 'none';
+      showToast(`✅ ${amount.toLocaleString()} UZS qabul qilindi! Yangi qarz: ${debtAfter.toLocaleString()} UZS`);
+      // Refresh diller detail agar ochiq bo'lsa
+      openDillerDetail(_paymentDillerIdx);
+      renderMgrViews();
+      // Chek chop
+      printPaymentReceipt(payment, d);
+  }
+
+  function renderDillerPaymentsBody(idx) {
+      let body = document.getElementById('diller-payments-body');
+      if(!body) return;
+      let d = appState.dillers[idx];
+      if(!d) return;
+      let pays = (appState.dillerPayments || []).filter(p => p.dillerName === d.name);
+      if(!pays.length) {
+          body.innerHTML = `<div style="text-align:center;padding:30px;color:#94a3b8;font-size:13px;">
+            <i class="fa-solid fa-money-bill" style="font-size:28px;opacity:.2;display:block;margin-bottom:8px;"></i>Hali to'lov yo'q
+          </div>`;
+          return;
+      }
+      body.innerHTML = pays.map((p,i) => `
+        <div style="display:grid;grid-template-columns:110px 1fr auto auto;align-items:center;gap:12px;padding:12px 24px;border-bottom:1px solid #f1f5f9;transition:background .1s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#1e293b;">${p.date}</div>
+            <div style="font-size:10px;color:#94a3b8;">${p.payType==='bank'?'Bank':p.payType==='plastik'?'Plastik':'Naqd'}</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#16a34a;">+${p.amount.toLocaleString()} UZS</div>
+            <div style="font-size:10px;color:#64748b;">
+              ${p.responsible?`<i class="fa-solid fa-user" style="color:#2563eb;margin-right:3px;"></i>${p.responsible}`:''}
+              ${p.comment?` · ${p.comment}`:''}
+            </div>
+          </div>
+          <div style="text-align:right;font-size:10px;color:#94a3b8;">
+            <div>${p.debtBefore.toLocaleString()}</div>
+            <div style="color:${p.debtAfter>0?'#dc2626':'#16a34a'};font-weight:700;">→ ${p.debtAfter.toLocaleString()}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            ${p.imgProof ? `<img src="${p.imgProof}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;cursor:pointer;" onclick="showPayImg('${i}')">` : ''}
+            <button onclick="printPaymentReceipt(appState.dillerPayments.filter(x=>x.dillerName==='${d.name}')[${i}], appState.dillers[${idx}])" style="padding:5px 10px;border:none;border-radius:6px;background:#eff6ff;color:#2563eb;font-size:10px;font-weight:700;cursor:pointer;"><i class="fa-solid fa-print"></i></button>
+          </div>
+        </div>`).join('');
+  }
+
+  function showPayImg(i) {
+      // Simple image viewer
+      let pays = (appState.dillerPayments || []);
+      let p = pays[i];
+      if(!p || !p.imgProof) return;
+      let w = window.open('','_blank','width=600,height=500');
+      w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${p.imgProof}" style="max-width:100%;max-height:100vh;object-fit:contain;"></body></html>`);
+      w.document.close();
+  }
+
+  function printPaymentReceipt(p, d) {
+      if(!p || !d) return;
+      let win = window.open('','_blank','width=520,height=460');
+      win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>To'lov cheki</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:24px;color:#111;font-size:13px;}
+        .top{display:flex;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:3px solid #15803d;}
+        .brand{font-size:18px;font-weight:900;color:#15803d;letter-spacing:2px;}
+        .brand small{display:block;font-size:9px;color:#64748b;font-weight:500;margin-top:2px;}
+        .badge{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;text-align:center;padding:9px;border-radius:8px;font-size:15px;font-weight:800;margin-bottom:14px;}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+        .card{background:#f0fdf4;border:1px solid #d1fae5;border-radius:7px;padding:9px 12px;}
+        .card label{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;}
+        .card span{display:block;font-size:13px;font-weight:700;margin-top:2px;}
+        .debt-box{border:2px solid #15803d;border-radius:8px;overflow:hidden;margin-bottom:14px;}
+        .debt-box .header{background:#15803d;color:#fff;padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.5px;}
+        .debt-row{display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;padding:12px 0;}
+        .debt-row div{border-right:1px solid #d1fae5;}
+        .debt-row div:last-child{border:none;}
+        .debt-label{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:4px;}
+        .amount{font-size:22px;font-weight:900;color:#16a34a;text-align:center;margin-bottom:14px;}
+        .img-proof{margin:10px 0;text-align:center;}
+        .img-proof img{max-width:100%;max-height:120px;border-radius:8px;border:2px solid #d1fae5;}
+        .footer{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+        .sign{text-align:center;}
+        .sign-line{border-top:2px solid #15803d;margin-top:28px;padding-top:5px;font-size:10px;color:#64748b;}
+        @media print{body{padding:12px;}}
+      </style></head><body>
+      <div class="top">
+        <div class="brand">EURA COMPIL<small>FACTORY OS 2026</small></div>
+        <div style="text-align:right;font-size:11px;color:#64748b;line-height:1.7;"><b>${p.id}</b><br>${p.date}</div>
+      </div>
+      <div class="badge">✅ TO'LOV QABUL QILINDI</div>
+      <div class="amount">${p.amount.toLocaleString()} UZS</div>
+      <div class="grid">
+        <div class="card"><label>Diller</label><span>${d.name}</span></div>
+        <div class="card"><label>To'lov turi</label><span>${p.payType==='bank'?'Bank o\'tkazma':p.payType==='plastik'?'Plastik':'Naqd pul'}</span></div>
+        <div class="card"><label>Mas'ul shaxs</label><span>${p.responsible||'—'}</span></div>
+        <div class="card"><label>Izoh</label><span>${p.comment||'—'}</span></div>
+      </div>
+      <div class="debt-box">
+        <div class="header">QARZ HOLATI</div>
+        <div class="debt-row">
+          <div><div class="debt-label">Oldingi qarz</div><div style="font-size:15px;font-weight:900;color:#dc2626;">${p.debtBefore.toLocaleString()}</div></div>
+          <div><div class="debt-label">To'landi</div><div style="font-size:15px;font-weight:900;color:#16a34a;">−${p.amount.toLocaleString()}</div></div>
+          <div><div class="debt-label">Yangi qarz</div><div style="font-size:15px;font-weight:900;color:${p.debtAfter>0?'#dc2626':'#16a34a'};">${p.debtAfter.toLocaleString()}</div></div>
+        </div>
+      </div>
+      ${p.imgProof ? `<div class="img-proof"><div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:4px;">ISBOT RASMI</div><img src="${p.imgProof}"></div>` : ''}
+      <div class="footer">
+        <div class="sign"><div class="sign-line">Qabul qiluvchi ________________<br><small>F.I.O · Imzo</small></div></div>
+        <div class="sign"><div class="sign-line">Diller ________________<br><small>F.I.O · Imzo</small></div></div>
+      </div>
+      <script>window.onload=()=>{window.print();}<\/script>
+      </body></html>`);
+      win.document.close();
+  }
+
+  function toggleSaleRow(id) {
+      let el = document.getElementById(id);
+      if(!el) return;
+      let arrow = document.getElementById(id+'-arrow');
+      let isOpen = el.style.display !== 'none';
+      el.style.display = isOpen ? 'none' : 'block';
+      if(arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+  }
+
+  function toggleDillerPartiya(id) {
+      let el = document.getElementById(id);
+      if(!el) return;
+      let di = id.replace('dp-','');
+      let arrow = document.getElementById('dp-arrow-'+di);
+      let isOpen = el.style.display !== 'none';
+      el.style.display = isOpen ? 'none' : 'block';
+      if(arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+  }
+
+  function printSingleSale(idx, saleId, date) {
+      let d = appState.dillers[idx];
+      let r = appState.managerSales.find(s => s.id === saleId) ||
+              appState.managerSales.find(s => (s.diller||s.dillerName) === d.name && s.date === date);
+      if(!r) return;
+      let docNum = 'S-' + Date.now().toString().slice(-6);
+      let today = new Date().toLocaleDateString('uz-UZ');
+      let win = window.open('','_blank','width=640,height=520');
+      win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Chek — ${d.name} — ${r.date}</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:24px 28px;color:#111;font-size:13px;}
+        .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:10px;border-bottom:3px solid #1e3a8a;}
+        .brand{font-size:18px;font-weight:900;color:#1e3a8a;letter-spacing:2px;}
+        .brand small{display:block;font-size:9px;color:#64748b;font-weight:500;letter-spacing:1px;margin-top:2px;}
+        .doc{text-align:right;font-size:11px;color:#64748b;line-height:1.7;}
+        .badge{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;text-align:center;padding:8px;border-radius:8px;font-size:14px;font-weight:800;margin-bottom:14px;}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+        .card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:9px 12px;}
+        .card label{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;}
+        .card span{display:block;font-size:13px;font-weight:700;color:#111;margin-top:2px;}
+        .items{width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+        .items thead tr{background:#1e3a8a;}
+        .items th{color:#fff;padding:8px 10px;font-size:10px;font-weight:700;text-align:left;}
+        .items td{padding:9px 10px;border-bottom:1px solid #f1f5f9;font-size:12px;}
+        .total{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;margin-top:14px;text-align:center;}
+        .total .v{font-size:22px;font-weight:900;color:#1d4ed8;}
+        .total .l{font-size:10px;color:#1d4ed8;font-weight:700;text-transform:uppercase;margin-top:2px;}
+        .pay{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:6px;background:${r.pay==='nasiya'?'#fef2f2':r.pay==='plastik'?'#eff6ff':'#f0fdf4'};color:${r.pay==='nasiya'?'#dc2626':r.pay==='plastik'?'#2563eb':'#16a34a'};}
+        .footer{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+        .sign{text-align:center;}
+        .sign-line{border-top:2px solid #1e3a8a;margin-top:28px;padding-top:5px;font-size:10px;color:#64748b;}
+        @media print{body{padding:10px 14px;}}
+      </style></head><body>
+      <div class="top">
+        <div class="brand">EURA COMPIL<small>FACTORY OS 2026</small></div>
+        <div class="doc"><b>${docNum}</b><br>Chop: ${today}<br>Sana: ${r.date}</div>
+      </div>
+      <div class="badge">🧾 &nbsp; SOTUV CHEKI</div>
+      <div class="grid">
+        <div class="card"><label>Diller</label><span>${d.name}</span></div>
+        <div class="card"><label>Telefon</label><span>${d.phone||'—'}</span></div>
+        <div class="card"><label>Manzil</label><span>${d.region||'—'}</span></div>
+        <div class="card"><label>Sana</label><span>${r.date}</span></div>
+      </div>
+      <table class="items">
+        <thead><tr>
+          <th>#</th><th>Tovar</th><th style="text-align:center;">Dona</th><th style="text-align:right;">Narh/dona</th><th style="text-align:right;">Jami</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:#64748b;">1</td>
+            <td>
+              ${r.img ? `<img src="${r.img}" style="width:48px;height:48px;object-fit:contain;border-radius:6px;border:1px solid #e2e8f0;float:left;margin-right:8px;">` : ''}
+              <b>${r.name||r.itemName||'—'}</b><br><small style="color:#94a3b8;">${r.pack||''}</small>
+            </td>
+            <td style="text-align:center;font-weight:800;color:#2563eb;">${r.qty||0}</td>
+            <td style="text-align:right;">${(r.price||0).toLocaleString()}</td>
+            <td style="text-align:right;font-weight:800;">${(r.total||0).toLocaleString()}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="total">
+        <div class="v">${(r.total||0).toLocaleString()} UZS</div>
+        <div class="l">Jami Summa</div>
+        <div class="pay">${r.pay==='nasiya'?'Nasiya':r.pay==='plastik'?'Plastik':'Naqd to\'lov'}</div>
+      </div>
+      <div class="footer">
+        <div class="sign"><div class="sign-line">Sotuvchi ________________<br><small>F.I.O · Imzo</small></div></div>
+        <div class="sign"><div class="sign-line">Xaridor ________________<br><small>F.I.O · Imzo</small></div></div>
+      </div>
+      <script>window.onload=()=>{window.print();}<\/script>
+      </body></html>`);
+      win.document.close();
+  }
+
+  function printPartiya(idx, date) {
+      let d = appState.dillers[idx];
+      let rows = appState.managerSales.filter(s => (s.diller||s.dillerName) === d.name && s.date === date);
+      let totalSum  = rows.reduce((s,r)=>s+r.total,0);
+      let totalDona = rows.reduce((s,r)=>s+(parseInt(r.qty)||0),0);
+      let docNum = 'P-' + Date.now().toString().slice(-6);
+      let today = new Date().toLocaleDateString('uz-UZ');
+      let rowsHtml = rows.map((r,i) => `
+        <tr>
+          <td style="text-align:center;color:#64748b;">${i+1}</td>
+          <td style="font-weight:600;">
+            ${r.img ? `<img src="${r.img}" style="width:36px;height:36px;object-fit:contain;border-radius:5px;border:1px solid #e2e8f0;float:left;margin-right:7px;">` : ''}
+            ${r.name||r.itemName||'—'} <small style="color:#64748b;">${r.pack||''}</small>
+          </td>
+          <td style="text-align:center;font-weight:800;color:#1d4ed8;">${r.qty||0} dona</td>
+          <td style="text-align:right;">${(r.price||0).toLocaleString()}</td>
+          <td style="text-align:right;font-weight:800;">${(r.total||0).toLocaleString()}</td>
+          <td style="text-align:center;color:${r.pay==='nasiya'?'#dc2626':'#059669'};font-weight:700;">${r.pay==='nasiya'?'Nasiya':r.pay==='plastik'?'Plastik':'Naqd'}</td>
+        </tr>`).join('');
+      let win = window.open('','_blank','width=740,height=600');
+      win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Partiya — ${d.name} — ${date}</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:24px 28px;color:#111;font-size:13px;}
+        .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1e3a8a;}
+        .brand{font-size:20px;font-weight:900;color:#1e3a8a;letter-spacing:3px;}
+        .brand small{display:block;font-size:9px;color:#64748b;font-weight:500;letter-spacing:2px;margin-top:2px;}
+        .doc{text-align:right;font-size:11px;color:#64748b;line-height:1.7;}
+        .partiya-badge{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;text-align:center;padding:9px;border-radius:8px;font-size:15px;font-weight:800;margin-bottom:14px;letter-spacing:1px;}
+        .info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+        .icard{background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:9px 12px;}
+        .icard label{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;}
+        .icard span{display:block;font-size:13px;font-weight:700;color:#111;margin-top:2px;}
+        table{width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+        thead tr{background:#1e3a8a;}
+        th{color:#fff;padding:8px 9px;font-size:10px;font-weight:700;letter-spacing:0.3px;text-align:left;}
+        td{padding:8px 9px;border-bottom:1px solid #f1f5f9;font-size:12px;}
+        tr:nth-child(even) td{background:#f8fafc;}
+        .tfoot td{background:#1e3a8a!important;color:#fff;font-weight:800;font-size:13px;padding:9px;}
+        .summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+        .sbox{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;text-align:center;}
+        .sbox .v{font-size:20px;font-weight:900;color:#1d4ed8;}
+        .sbox .l{font-size:9px;color:#1d4ed8;font-weight:700;text-transform:uppercase;margin-top:2px;}
+        .footer{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+        .sign{text-align:center;}
+        .sign-line{border-top:2px solid #1e3a8a;margin-top:32px;padding-top:5px;font-size:10px;color:#64748b;}
+        @media print{body{padding:10px 14px;}}
+      </style></head><body>
+      <div class="top">
+        <div class="brand">EURA COMPIL<small>FACTORY OS 2026</small></div>
+        <div class="doc"><b>${docNum}</b><br>Chop: ${today}<br>Partiya sanasi: ${date}</div>
+      </div>
+      <div class="partiya-badge">📦 &nbsp; BIR KUNLIK PARTIYA NAKLADNOYI</div>
+      <div class="info">
+        <div class="icard"><label>Diller</label><span>${d.name}</span></div>
+        <div class="icard"><label>Telefon</label><span>${d.phone||'—'}</span></div>
+        <div class="icard"><label>Manzil</label><span>${d.region||'—'}</span></div>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="width:32px;text-align:center;">#</th>
+          <th>Tovar Nomi</th>
+          <th style="width:80px;text-align:center;">DONA</th>
+          <th style="width:100px;text-align:right;">Narh/dona</th>
+          <th style="width:110px;text-align:right;">Jami (UZS)</th>
+          <th style="width:80px;text-align:center;">To'lov</th>
+        </tr></thead>
+        <tbody>${rowsHtml}</tbody>
+        <tfoot><tr>
+          <td class="tfoot" colspan="2" style="text-align:right;">JAMI:</td>
+          <td class="tfoot" style="text-align:center;">${totalDona} dona</td>
+          <td class="tfoot"></td>
+          <td class="tfoot" style="text-align:right;">${totalSum.toLocaleString()} UZS</td>
+          <td class="tfoot"></td>
+        </tr></tfoot>
+      </table>
+      <div class="summary">
+        <div class="sbox"><div class="v">${totalDona}</div><div class="l">Jami Dona</div></div>
+        <div class="sbox"><div class="v">${totalSum.toLocaleString()}</div><div class="l">Jami Summa (UZS)</div></div>
+      </div>
+      <div class="footer">
+        <div class="sign"><div class="sign-line">Yetkazib beruvchi ________________<br><small>F.I.O · Imzo</small></div></div>
+        <div class="sign"><div class="sign-line">Qabul qiluvchi ________________<br><small>F.I.O · Imzo</small></div></div>
+      </div>
+      </body></html>`);
+      win.document.close();
+      win.onload = () => win.print();
   }
 
   function printDillerNakladnoy(idx) {
       let d = appState.dillers[idx];
-      let sales = appState.managerSales.filter(s => s.dillerName === d.name);
+      let sales = appState.managerSales.filter(s => (s.diller||s.dillerName) === d.name).sort((a,b)=>a.date.localeCompare(b.date));
       let totalSold = sales.reduce((s,r)=>s+r.total,0);
+      let totalKg = sales.reduce((s,r)=>s+(parseInt(r.qty)||0),0);
       let today = new Date().toLocaleDateString('uz-UZ');
+      let docNum = 'EC-' + Date.now().toString().slice(-6);
       let rows = sales.map((r,i) => `
         <tr>
-          <td>${i+1}</td>
+          <td style="text-align:center;color:#64748b;">${i+1}</td>
           <td>${r.date}</td>
-          <td>${r.itemName||'—'}</td>
-          <td style="text-align:center;">${r.qty||1}</td>
-          <td style="text-align:right;">${(r.unitCost||0).toLocaleString()}</td>
-          <td style="text-align:right;">${(r.price||r.total||0).toLocaleString()}</td>
-          <td style="text-align:right;font-weight:700;">${(r.total||0).toLocaleString()}</td>
+          <td style="font-weight:600;">
+            ${r.img ? `<img src="${r.img}" style="width:32px;height:32px;object-fit:contain;border-radius:4px;border:1px solid #e2e8f0;float:left;margin-right:6px;">` : ''}
+            ${r.name||r.itemName||'—'} <small style="color:#64748b;">${r.pack||''}</small>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#1d4ed8;">${r.qty||1} dona</td>
+          <td style="text-align:right;">${(r.price||0).toLocaleString()}</td>
+          <td style="text-align:right;font-weight:800;">${(r.total||0).toLocaleString()}</td>
+          <td style="text-align:center;color:${r.pay==='nasiya'?'#dc2626':'#059669'};font-weight:700;">${r.pay==='nasiya'?'Nasiya':r.pay==='plastik'?'Plastik':'Naqd'}</td>
         </tr>`).join('');
-      let win = window.open('','_blank','width=800,height:600');
+      let win = window.open('','_blank','width=860,height=700');
       win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nakladnoy — ${d.name}</title>
       <style>
-        body{font-family:Arial,sans-serif;padding:30px;color:#111;font-size:13px;}
-        .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;}
-        .brand{font-size:22px;font-weight:900;color:#1e3a8a;letter-spacing:2px;}
-        .brand small{display:block;font-size:11px;color:#64748b;font-weight:400;letter-spacing:1px;}
-        .title{font-size:18px;font-weight:800;text-align:center;margin:18px 0;color:#1e3a8a;border-bottom:2px solid #1e3a8a;padding-bottom:8px;}
-        .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px;background:#f8fafc;padding:14px;border-radius:8px;}
-        .info-item label{font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;}
-        .info-item span{display:block;font-size:13px;font-weight:700;color:#111;}
-        table{width:100%;border-collapse:collapse;margin-bottom:16px;}
-        th{background:#1e3a8a;color:#fff;padding:9px 8px;font-size:11px;text-align:left;}
-        td{padding:8px 8px;border-bottom:1px solid #e2e8f0;font-size:12px;}
-        tr:nth-child(even){background:#f8fafc;}
-        .total-row{background:#1e3a8a!important;color:#fff;font-weight:800;}
-        .total-row td{color:#fff;}
-        .debt-box{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;padding:14px;background:#fef2f2;border-radius:8px;border:1px solid #fee2e2;}
-        .debt-item label{font-size:10px;color:#991b1b;font-weight:700;text-transform:uppercase;}
-        .debt-item span{display:block;font-size:15px;font-weight:900;color:#dc2626;}
-        .footer{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-        .sign-line{border-top:1px solid #111;margin-top:32px;padding-top:6px;font-size:11px;color:#64748b;}
-        @media print{body{padding:10px;}}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:28px 32px;color:#111;font-size:13px;background:#fff;}
+        .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:3px solid #1e3a8a;}
+        .brand{font-size:24px;font-weight:900;color:#1e3a8a;letter-spacing:3px;line-height:1.1;}
+        .brand small{display:block;font-size:10px;color:#64748b;font-weight:500;letter-spacing:2px;margin-top:3px;}
+        .doc-info{text-align:right;font-size:11px;color:#64748b;line-height:1.7;}
+        .doc-info b{color:#1e3a8a;font-size:13px;}
+        .title-bar{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;text-align:center;padding:10px;border-radius:8px;font-size:16px;font-weight:800;letter-spacing:1px;margin-bottom:18px;}
+        .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+        .info-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;}
+        .info-card label{font-size:9px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;}
+        .info-card span{display:block;font-size:14px;font-weight:700;color:#111;margin-top:2px;}
+        table{width:100%;border-collapse:collapse;margin-bottom:14px;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+        thead tr{background:#1e3a8a;}
+        th{color:#fff;padding:9px 10px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-align:left;}
+        td{padding:8px 10px;border-bottom:1px solid #f1f5f9;font-size:12px;}
+        tr:nth-child(even) td{background:#f8fafc;}
+        tr:hover td{background:#eff6ff;}
+        .tfoot-row td{background:#1e3a8a!important;color:#fff;font-weight:800;font-size:13px;padding:10px;}
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0;}
+        .stat-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center;}
+        .stat-box .val{font-size:18px;font-weight:900;color:#1e3a8a;}
+        .stat-box .lbl{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;margin-top:2px;}
+        .debt-section{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;margin-bottom:16px;}
+        .debt-section h4{font-size:11px;color:#991b1b;font-weight:800;margin-bottom:8px;text-transform:uppercase;}
+        .debt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+        .debt-item{text-align:center;}
+        .debt-item .dval{font-size:15px;font-weight:900;color:#dc2626;}
+        .debt-item .dlbl{font-size:9px;color:#991b1b;font-weight:700;margin-top:2px;}
+        .footer{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+        .sign-block{text-align:center;}
+        .sign-line{border-top:2px solid #1e3a8a;margin-top:36px;padding-top:6px;font-size:11px;color:#64748b;font-weight:600;}
+        .watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:80px;font-weight:900;color:rgba(30,58,138,0.04);white-space:nowrap;pointer-events:none;z-index:0;}
+        @media print{body{padding:12px 16px;}.watermark{display:none;}}
       </style></head><body>
+      <div class="watermark">EURA COMPIL</div>
       <div class="header">
-        <div class="brand">EURA COMPIL<small>FACTORY OS 2026</small></div>
-        <div style="text-align:right;font-size:11px;color:#64748b;">Sana: ${today}<br>Raqam: EC-${Date.now().toString().slice(-6)}</div>
+        <div>
+          <div class="brand">EURA COMPIL<small>FACTORY OS · 2026</small></div>
+        </div>
+        <div class="doc-info">
+          <div><b>${docNum}</b></div>
+          <div>Sana: ${today}</div>
+          <div>Tuzuvchi: Menejer</div>
+        </div>
       </div>
-      <div class="title">📦 TOVARLAR NAKLADNOYI</div>
+      <div class="title-bar">📦 &nbsp; TOVARLAR NAKLADNOYI &nbsp; / &nbsp; НАКЛАДНАЯ НА ТОВАРЫ</div>
       <div class="info-grid">
-        <div class="info-item"><label>Diller</label><span>${d.name}</span></div>
-        <div class="info-item"><label>Telefon</label><span>${d.phone||'—'}</span></div>
-        <div class="info-item"><label>Manzil</label><span>${d.region||'—'}</span></div>
-        <div class="info-item"><label>Izoh</label><span>${d.comment||'—'}</span></div>
+        <div class="info-card"><label>Diller / Mijoz</label><span>${d.name}</span></div>
+        <div class="info-card"><label>Telefon Raqami</label><span>${d.phone||'—'}</span></div>
+        <div class="info-card"><label>Manzil / Shahar</label><span>${d.region||'—'}</span></div>
+        <div class="info-card"><label>Izoh</label><span>${d.comment||'—'}</span></div>
       </div>
       <table>
-        <thead><tr><th>#</th><th>Sana</th><th>Tovar Nomi</th><th style="text-align:center">Miqdor</th><th style="text-align:right">Tannarh</th><th style="text-align:right">Narh</th><th style="text-align:right">Jami</th></tr></thead>
+        <thead><tr>
+          <th style="width:28px;text-align:center;">#</th>
+          <th style="width:88px;">Sana</th>
+          <th>Tovar Nomi</th>
+          <th style="width:75px;text-align:center;">DONA</th>
+          <th style="width:100px;text-align:right;">Narh/dona</th>
+          <th style="width:110px;text-align:right;">Jami (UZS)</th>
+          <th style="width:75px;text-align:center;">To'lov</th>
+        </tr></thead>
         <tbody>${rows}</tbody>
-        <tfoot><tr class="total-row"><td colspan="6" style="text-align:right;padding:10px 8px;">UMUMIY JAMI:</td><td style="text-align:right;padding:10px 8px;font-size:15px;">${totalSold.toLocaleString()} UZS</td></tr></tfoot>
+        <tfoot><tr>
+          <td class="tfoot-row" colspan="3" style="text-align:right;">UMUMIY JAMI:</td>
+          <td class="tfoot-row" style="text-align:center;">${totalKg} dona</td>
+          <td class="tfoot-row"></td>
+          <td class="tfoot-row" style="text-align:right;font-size:15px;">${totalSold.toLocaleString()} UZS</td>
+          <td class="tfoot-row"></td>
+        </tr></tfoot>
       </table>
-      <div class="debt-box">
-        <div class="debt-item"><label>Oldingi Qarzdorlik</label><span>${Math.max(0,d.debt-totalSold).toLocaleString()} UZS</span></div>
-        <div class="debt-item"><label>Hozir Qo'shilgan</label><span>${totalSold.toLocaleString()} UZS</span></div>
-        <div class="debt-item"><label>Umumiy Qarzdorlik</label><span>${d.debt.toLocaleString()} UZS</span></div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="val">${totalSold.toLocaleString()}</div><div class="lbl">Jami Sotuv (UZS)</div></div>
+        <div class="stat-box"><div class="val">${totalKg}</div><div class="lbl">Umumiy Dona</div></div>
+        <div class="stat-box"><div class="val">${sales.length}</div><div class="lbl">Buyurtmalar Soni</div></div>
       </div>
-      <div style="background:#eff6ff;border-radius:8px;padding:12px;font-size:12px;color:#1e40af;margin-bottom:16px;">
-        <b>🚚 Dostavka Xizmati:</b> Tovar yetkazib berish narhi kelishuvga ko'ra
-      </div>
+      ${d.debt>0?`<div class="debt-section"><h4>⚠ Qarzdorlik Ma'lumotlari</h4><div class="debt-grid">
+        <div class="debt-item"><div class="dval">${d.debt.toLocaleString()}</div><div class="dlbl">Umumiy Qarzdorlik (UZS)</div></div>
+        <div class="debt-item"><div class="dval">${totalSold.toLocaleString()}</div><div class="dlbl">Hozirgi Tovar Summasi</div></div>
+        <div class="debt-item"><div class="dval">${Math.max(0,d.debt-totalSold).toLocaleString()}</div><div class="dlbl">Qolgan Qarzdorlik</div></div>
+      </div></div>`:''}
       <div class="footer">
-        <div><div class="sign-line">Yetkazib beruvchi imzosi: ________________</div></div>
-        <div><div class="sign-line">Qabul qiluvchi imzosi: ________________</div></div>
+        <div class="sign-block"><div class="sign-line">Yetkazib beruvchi: ________________________<br><small>F.I.O · Imzo · Sana</small></div></div>
+        <div class="sign-block"><div class="sign-line">Qabul qiluvchi: ________________________<br><small>F.I.O · Imzo · Sana</small></div></div>
       </div>
       </body></html>`);
       win.document.close();
@@ -4425,7 +5150,7 @@
           return;
       }
       el.innerHTML = appState.dillers.map((d,i) => {
-          let sales = appState.managerSales.filter(s=>s.dillerName===d.name);
+          let sales = appState.managerSales.filter(s=>(s.diller||s.dillerName)===d.name);
           let totalSold = sales.reduce((s,r)=>s+r.total,0);
           let lastSale = sales.sort((a,b)=>b.date.localeCompare(a.date))[0];
           return `
@@ -4454,42 +5179,470 @@
       }).join('');
   }
 
+  function switchDillerTab(tab) {
+      document.getElementById('dtab-content-list').style.display      = tab==='list'      ? '' : 'none';
+      document.getElementById('dtab-content-analytics').style.display = tab==='analytics' ? '' : 'none';
+      let activeStyle   = 'padding:9px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-weight:800;font-size:13px;cursor:pointer;';
+      let inactiveStyle = 'padding:9px 20px;border:1.5px solid rgba(168,85,247,0.35);border-radius:10px;background:transparent;color:#a855f7;font-weight:800;font-size:13px;cursor:pointer;';
+      document.getElementById('dtab-list').style.cssText      = tab==='list'      ? activeStyle : inactiveStyle;
+      document.getElementById('dtab-analytics').style.cssText = tab==='analytics' ? activeStyle : inactiveStyle;
+      if(tab==='analytics') renderDillerAnalytics();
+  }
+
+  function renderDillerAnalytics() {
+      let el = document.getElementById('diller-analytics-content');
+      if(!el) return;
+      let dillers = appState.dillers;
+      let sales   = appState.managerSales || [];
+      let invoices = appState.mgrInvoices || [];
+
+      if(!dillers.length) {
+          el.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-muted);font-size:15px;">Hali diller yo'q</div>`;
+          return;
+      }
+
+      // Har bir diller uchun statistika
+      let stats = dillers.map(d => {
+          let dSales = sales.filter(s => (s.diller||s.dillerName) === d.name);
+          let totalSum  = dSales.reduce((s,r) => s + (r.total||0), 0);
+          let totalDona = dSales.reduce((s,r) => s + (r.qty||0), 0);
+          let orderCount = invoices.filter(inv => inv.dillerName === d.name).length || dSales.length;
+          // mahsulotlar kesimi
+          let prodMap = {};
+          dSales.forEach(r => { prodMap[r.name] = (prodMap[r.name]||0) + (r.qty||0); });
+          let topProd = Object.entries(prodMap).sort((a,b)=>b[1]-a[1])[0];
+          return { name: d.name, region: d.region||'—', debt: d.debt||0, totalSum, totalDona, orderCount, topProd };
+      }).sort((a,b) => b.totalSum - a.totalSum);
+
+      let maxSum  = Math.max(...stats.map(s=>s.totalSum), 1);
+      let maxDona = Math.max(...stats.map(s=>s.totalDona), 1);
+      let maxOrd  = Math.max(...stats.map(s=>s.orderCount), 1);
+
+      // Ranglar
+      const COLORS = ['#a855f7','#2563eb','#10b981','#f59e0b','#ef4444','#06b6d4','#ec4899','#84cc16'];
+
+      // 1. TOP DILLERLAR — Sotuv summasi bo'yicha gorizontal bar
+      let barRows = stats.map((s,i) => {
+          let pct = maxSum > 0 ? (s.totalSum/maxSum*100).toFixed(1) : 0;
+          let color = COLORS[i % COLORS.length];
+          return `<div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+                <span style="font-size:13px;font-weight:700;color:var(--text-main);">${s.name}</span>
+                <span style="font-size:11px;color:var(--text-muted);">${s.region}</span>
+                ${i===0?`<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(168,85,247,0.12);color:#a855f7;font-weight:800;">👑 TOP</span>`:''}
+              </div>
+              <span style="font-size:13px;font-weight:800;color:${color};">${s.totalSum.toLocaleString()} UZS</span>
+            </div>
+            <div style="background:rgba(0,0,0,0.06);border-radius:8px;height:10px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,${color},${color}99);border-radius:8px;transition:width .6s;"></div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // 2. DONA MIQDORI bo'yicha bar
+      let donaRows = [...stats].sort((a,b)=>b.totalDona-a.totalDona).map((s,i) => {
+          let pct = maxDona > 0 ? (s.totalDona/maxDona*100).toFixed(1) : 0;
+          let color = COLORS[i % COLORS.length];
+          return `<div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:12px;font-weight:700;color:var(--text-main);">${s.name}</span>
+              <span style="font-size:12px;font-weight:800;color:${color};">${s.totalDona} dona</span>
+            </div>
+            <div style="background:rgba(0,0,0,0.06);border-radius:6px;height:8px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:${color};border-radius:6px;"></div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // 3. FAOLLIK (buyurtmalar soni) bo'yicha
+      let ordRows = [...stats].sort((a,b)=>b.orderCount-a.orderCount).map((s,i) => {
+          let pct = maxOrd > 0 ? (s.orderCount/maxOrd*100).toFixed(1) : 0;
+          let color = COLORS[i % COLORS.length];
+          return `<div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:12px;font-weight:700;color:var(--text-main);">${s.name}</span>
+              <span style="font-size:12px;font-weight:800;color:${color};">${s.orderCount} ta buyurtma</span>
+            </div>
+            <div style="background:rgba(0,0,0,0.06);border-radius:6px;height:8px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:${color};border-radius:6px;"></div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // 4. QARZ holati — har diller uchun kartochka
+      let debtCards = [...stats].sort((a,b)=>b.debt-a.debt).map((s,i) => {
+          let color = s.debt > 0 ? '#ef4444' : '#10b981';
+          let icon  = s.debt > 0 ? 'fa-exclamation-circle' : 'fa-check-circle';
+          return `<div style="background:var(--glass-bg);border:1.5px solid ${s.debt>0?'rgba(239,68,68,0.25)':'rgba(16,185,129,0.25)'};border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:${s.debt>0?'rgba(239,68,68,0.1)':'rgba(16,185,129,0.1)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fa-solid ${icon}" style="color:${color};font-size:18px;"></i>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:800;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</div>
+              <div style="font-size:11px;color:var(--text-muted);">${s.region}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:14px;font-weight:900;color:${color};">${s.debt>0?'+':''}${s.debt.toLocaleString()}</div>
+              <div style="font-size:10px;color:var(--text-muted);">UZS</div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // 5. Mahsulot bo'yicha crossover — qaysi diller qaysi mahsulotni olgan
+      let allProds = [...new Set(sales.map(s=>s.name).filter(Boolean))];
+      let crossRows = stats.map(s => {
+          let dSales = sales.filter(r => (r.diller||r.dillerName) === s.name);
+          let cells = allProds.map(p => {
+              let qty = dSales.filter(r=>r.name===p).reduce((sum,r)=>sum+(r.qty||0),0);
+              return `<td style="padding:8px 10px;text-align:center;font-size:12px;font-weight:${qty>0?'800':'400'};color:${qty>0?'#2563eb':'var(--text-muted)'};">${qty>0?qty:'—'}</td>`;
+          }).join('');
+          return `<tr style="border-bottom:1px solid var(--glass-border);">
+            <td style="padding:8px 10px;font-size:13px;font-weight:700;color:var(--text-main);white-space:nowrap;">${s.name}</td>
+            ${cells}
+          </tr>`;
+      }).join('');
+
+      let crossHeader = allProds.map(p=>`<th style="padding:8px 10px;font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;white-space:nowrap;">${p}</th>`).join('');
+
+      el.innerHTML = `
+        <!-- Umumiy stat kartochkalar -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:24px;">
+          <div style="background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(124,58,237,0.08));border:1.5px solid rgba(168,85,247,0.25);border-radius:16px;padding:18px;">
+            <div style="font-size:11px;font-weight:800;color:#a855f7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;"><i class="fa-solid fa-people-group" style="margin-right:4px;"></i>Jami Dillerlar</div>
+            <div style="font-size:28px;font-weight:900;color:var(--text-main);">${dillers.length}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">hamkor</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(5,150,105,0.08));border:1.5px solid rgba(16,185,129,0.25);border-radius:16px;padding:18px;">
+            <div style="font-size:11px;font-weight:800;color:#10b981;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;"><i class="fa-solid fa-money-bill-wave" style="margin-right:4px;"></i>Jami Sotuv</div>
+            <div style="font-size:22px;font-weight:900;color:var(--text-main);">${stats.reduce((s,d)=>s+d.totalSum,0).toLocaleString()}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">UZS</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(29,78,216,0.08));border:1.5px solid rgba(37,99,235,0.25);border-radius:16px;padding:18px;">
+            <div style="font-size:11px;font-weight:800;color:#2563eb;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;"><i class="fa-solid fa-box" style="margin-right:4px;"></i>Jami Dona</div>
+            <div style="font-size:28px;font-weight:900;color:var(--text-main);">${stats.reduce((s,d)=>s+d.totalDona,0).toLocaleString()}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">dona</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(220,38,38,0.06));border:1.5px solid rgba(239,68,68,0.2);border-radius:16px;padding:18px;">
+            <div style="font-size:11px;font-weight:800;color:#ef4444;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right:4px;"></i>Umumiy Qarz</div>
+            <div style="font-size:22px;font-weight:900;color:var(--text-main);">${dillers.reduce((s,d)=>s+(d.debt>0?d.debt:0),0).toLocaleString()}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">UZS</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
+          <!-- Sotuv summasi bar chart -->
+          <div class="glass-card" style="border-radius:16px;padding:20px;">
+            <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-ranking-star" style="color:#a855f7;margin-right:6px;"></i>Sotuv Reytingi (UZS)</div>
+            ${barRows || '<div style="color:var(--text-muted);font-size:13px;">Ma\'lumot yo\'q</div>'}
+          </div>
+          <!-- Dona miqdori bar chart -->
+          <div class="glass-card" style="border-radius:16px;padding:20px;">
+            <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-boxes-stacking" style="color:#2563eb;margin-right:6px;"></i>Dona Miqdori Reytingi</div>
+            ${donaRows || '<div style="color:var(--text-muted);font-size:13px;">Ma\'lumot yo\'q</div>'}
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
+          <!-- Faollik chart -->
+          <div class="glass-card" style="border-radius:16px;padding:20px;">
+            <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-bolt" style="color:#f59e0b;margin-right:6px;"></i>Faollik (Buyurtmalar Soni)</div>
+            ${ordRows || '<div style="color:var(--text-muted);font-size:13px;">Ma\'lumot yo\'q</div>'}
+          </div>
+          <!-- Qarz holati -->
+          <div class="glass-card" style="border-radius:16px;padding:20px;">
+            <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:16px;"><i class="fa-solid fa-scale-balanced" style="color:#ef4444;margin-right:6px;"></i>Qarz Holati</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">${debtCards || '<div style="color:var(--text-muted);font-size:13px;">Qarz yo\'q</div>'}</div>
+          </div>
+        </div>
+
+        ${allProds.length ? `
+        <!-- Mahsulot kesimi jadval -->
+        <div class="glass-card" style="border-radius:16px;padding:20px;">
+          <div style="font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:14px;"><i class="fa-solid fa-table-cells" style="color:#10b981;margin-right:6px;"></i>Mahsulot Bo'yicha Taqqoslash (dona)</div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;min-width:400px;">
+              <thead><tr style="background:rgba(16,185,129,0.07);">
+                <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;">Diller</th>
+                ${crossHeader}
+              </tr></thead>
+              <tbody>${crossRows}</tbody>
+            </table>
+          </div>
+        </div>` : ''}
+      `;
+  }
+
   function renderMgrSaleSelects() {
       let dSel = document.getElementById('mgr-sale-diller');
       let iSel = document.getElementById('mgr-sale-item');
       if(dSel) dSel.innerHTML = appState.dillers.map((d,i) => `<option value="${i}">${d.name} (${d.region||'—'})</option>`).join('') || '<option disabled>Diller yo\'q</option>';
-      // Menejer ombori = shopInventory dan manager transferi
       let mgrInv = appState.shopInventory;
-      if(iSel) iSel.innerHTML = mgrInv.length
-          ? mgrInv.map((it,i) => `<option value="${i}">${it.name} — ${it.pack} (${it.qty} dona)</option>`).join('')
-          : `<option disabled>Ombor bo'sh</option>`;
+      if(iSel) {
+          iSel.innerHTML = mgrInv.length
+              ? mgrInv.map((it,i) => `<option value="${i}">${it.name} — ${it.pack} (${it.qty} dona)</option>`).join('')
+              : `<option disabled>Ombor bo'sh</option>`;
+          // Show image preview next to select
+          let updatePreview = () => {
+              let idx = parseInt(iSel.value);
+              let it = mgrInv[idx];
+              let prev = document.getElementById('mgr-item-img-preview');
+              if(prev) prev.innerHTML = it && it.img
+                  ? `<img src="${it.img}" style="width:54px;height:54px;object-fit:contain;border-radius:8px;border:1px solid var(--glass-border);">`
+                  : `<div style="width:54px;height:54px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-box" style="color:var(--text-muted);font-size:20px;"></i></div>`;
+          };
+          iSel.onchange = updatePreview;
+          updatePreview();
+      }
   }
 
-  function makeMgrSale() {
-      let dIdx = parseInt(document.getElementById('mgr-sale-diller').value);
+  // ===== YANGI KO'P TOVARLI FAKTURA TIZIMI =====
+  let mgrCart = []; // { itemIdx, name, pack, qty, price, total, img }
+
+  function addMgrCartItem() {
       let iIdx = parseInt(document.getElementById('mgr-sale-item').value);
-      let qty = parseInt(document.getElementById('mgr-sale-qty').value) || 0;
-      let price = parseFloat(document.getElementById('mgr-sale-price').value) || 0;
-      let pay = document.getElementById('mgr-sale-pay').value;
-      let diller = appState.dillers[dIdx];
+      let qty  = parseInt(document.getElementById('mgr-sale-qty').value) || 0;
+      let price = fmtVal(document.getElementById('mgr-sale-price'));
       let item = appState.shopInventory[iIdx];
-      if(!diller) { showToast('Diller tanlanmagan!', 'danger'); return; }
       if(!item) { showToast('Tovar tanlanmagan!', 'danger'); return; }
       if(qty <= 0) { showToast('Miqdor kiriting!', 'danger'); return; }
-      if(qty > item.qty) { showToast(`Omborda faqat ${item.qty} dona bor!`, 'danger'); return; }
       if(price <= 0) { showToast('Narh kiriting!', 'danger'); return; }
-      let total = qty * price;
-      let date = new Date().toISOString().split('T')[0];
-      if(pay === 'nasiya') diller.debt += total;
-      item.qty -= qty;
-      if(item.qty <= 0) appState.shopInventory.splice(iIdx, 1);
-      appState.managerSales.push({ id: 'MS-'+Date.now().toString().slice(-6), date, diller: diller.name, name: item.name, pack: item.pack, qty, price, total, pay });
+      // Check stock (including already carted qty)
+      let alreadyCarted = mgrCart.filter(c=>c.name===item.name&&c.pack===item.pack).reduce((s,c)=>s+c.qty,0);
+      if(qty + alreadyCarted > item.qty) { showToast(`Omborda faqat ${item.qty} dona bor (${alreadyCarted} dona savatda)!`, 'danger'); return; }
+      mgrCart.push({ itemIdx: iIdx, name: item.name, pack: item.pack, qty, price, total: qty*price, img: item.img||null });
       document.getElementById('mgr-sale-qty').value = '';
-      document.getElementById('mgr-sale-price').value = '';
-      saveState();
-      showToast(`✅ ${qty} dona ${item.name} → ${diller.name}ga sotildi!`);
-      renderMgrViews();
+      let spEl = document.getElementById('mgr-sale-price'); spEl.value=''; spEl.dataset.raw='';
+      renderMgrCart();
+      showToast(`✅ ${item.name} savatga qo'shildi`);
   }
+
+  function removeMgrCartItem(idx) {
+      mgrCart.splice(idx, 1);
+      renderMgrCart();
+  }
+
+  function renderMgrCart() {
+      let el = document.getElementById('mgr-cart-items');
+      let totalEl = document.getElementById('mgr-cart-total');
+      if(!el) return;
+      if(!mgrCart.length) { el.innerHTML = ''; if(totalEl) totalEl.style.display='none'; return; }
+      let grandTotal = mgrCart.reduce((s,c)=>s+c.total,0);
+      el.innerHTML = mgrCart.map((c,i)=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;margin-bottom:6px;">
+          ${c.img ? `<img src="${c.img}" style="width:32px;height:32px;object-fit:contain;border-radius:5px;border:1px solid var(--glass-border);flex-shrink:0;">` : `<div style="width:32px;height:32px;border-radius:5px;background:rgba(37,99,235,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-box" style="color:#2563eb;font-size:12px;"></i></div>`}
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.name} <span style="font-weight:400;color:var(--text-muted);">${c.pack}</span></div>
+            <div style="font-size:11px;color:#64748b;">${c.qty} dona × ${c.price.toLocaleString()} = <b style="color:#2563eb;">${c.total.toLocaleString()} UZS</b></div>
+          </div>
+          <button onclick="removeMgrCartItem(${i})" style="width:26px;height:26px;border:none;border-radius:6px;background:rgba(239,68,68,0.1);color:#ef4444;cursor:pointer;font-size:13px;flex-shrink:0;">×</button>
+        </div>`).join('');
+      if(totalEl) { totalEl.style.display='block'; totalEl.innerHTML = `Tovarlar jami: <span style="color:#16a34a;">${grandTotal.toLocaleString()} UZS</span>`; }
+  }
+
+  function submitMgrInvoice() {
+      let dIdx = parseInt(document.getElementById('mgr-sale-diller').value);
+      let diller = appState.dillers[dIdx];
+      if(!diller) { showToast('Diller tanlanmagan!', 'danger'); return; }
+      if(!mgrCart.length) { showToast('Savat bo\'sh — tovar qo\'shing!', 'danger'); return; }
+      let pay = document.getElementById('mgr-sale-pay').value;
+      let deliveryCost = fmtVal(document.getElementById('mgr-delivery-cost'));
+      let deliveryPayer = document.getElementById('mgr-delivery-payer').value;
+      let transportNum  = document.getElementById('mgr-transport-num').value.trim();
+      let transportPhone= document.getElementById('mgr-transport-phone').value.trim();
+      let mgrNameVal    = document.getElementById('mgr-name').value.trim();
+      let mgrPhoneVal   = document.getElementById('mgr-phone').value.trim();
+      let date = new Date().toISOString().split('T')[0];
+      let goodsTotal = mgrCart.reduce((s,c)=>s+c.total, 0);
+      // Qarz hisob-kitob
+      let debtBefore = diller.debt;
+      let debtChange = 0;
+      if(pay === 'nasiya') debtChange += goodsTotal;
+      if(deliveryCost > 0) {
+          if(deliveryPayer === 'diller') debtChange += deliveryCost;
+          else debtChange -= deliveryCost; // biz to'laymiz — qarzdan ayiramiz
+      }
+      diller.debt += debtChange;
+      let debtAfter = diller.debt;
+      // Omborda kamaytirish
+      mgrCart.forEach(c => {
+          let item = appState.shopInventory.find(x=>x.name===c.name&&x.pack===c.pack);
+          if(item) { item.qty -= c.qty; if(item.qty <= 0) appState.shopInventory.splice(appState.shopInventory.indexOf(item),1); }
+      });
+      // Faktura saqlash
+      let invoiceId = 'INV-'+Date.now().toString().slice(-7);
+      let invoice = {
+          id: invoiceId, date,
+          dillerName: diller.name,
+          items: mgrCart.map(c=>({...c})),
+          goodsTotal,
+          delivery: { cost: deliveryCost, payer: deliveryPayer, transportNum, transportPhone },
+          manager: { name: mgrNameVal, phone: mgrPhoneVal },
+          pay,
+          debtBefore, debtChange, debtAfter
+      };
+      appState.mgrInvoices.unshift(invoice);
+      // Eski managerSales ga ham yozamiz (diller detail uchun backward compat)
+      mgrCart.forEach(c => {
+          appState.managerSales.push({ id:'MS-'+Date.now().toString().slice(-6), date, diller: diller.name, name: c.name, pack: c.pack, qty: c.qty, price: c.price, total: c.total, pay, img: c.img||null, invoiceId });
+      });
+      mgrCart = [];
+      renderMgrCart();
+      let dcEl = document.getElementById('mgr-delivery-cost'); dcEl.value=''; dcEl.dataset.raw='';
+      document.getElementById('mgr-transport-num').value = '';
+      document.getElementById('mgr-transport-phone').value = '';
+      saveState();
+      showToast(`✅ Faktura yaratildi! Qarz: ${debtBefore.toLocaleString()} → ${debtAfter.toLocaleString()} UZS`);
+      renderMgrViews();
+      printMgrInvoice(invoice);
+  }
+
+  function printMgrInvoice(inv) {
+      if(!inv) return;
+      let d = appState.dillers.find(x=>x.name===inv.dillerName) || {};
+      let docNum = inv.id;
+      let today = new Date().toLocaleDateString('uz-UZ');
+      let rowsHtml = inv.items.map((r,i)=>`
+        <tr>
+          <td style="text-align:center;color:#64748b;">${i+1}</td>
+          <td>
+            ${r.img?`<img src="${r.img}" style="width:34px;height:34px;object-fit:contain;border-radius:5px;border:1px solid #e2e8f0;float:left;margin-right:7px;">`:''}
+            <b>${r.name}</b><br><small style="color:#94a3b8;">${r.pack}</small>
+          </td>
+          <td style="text-align:center;font-weight:800;color:#1d4ed8;">${r.qty}</td>
+          <td style="text-align:right;">${r.price.toLocaleString()}</td>
+          <td style="text-align:right;font-weight:800;">${r.total.toLocaleString()}</td>
+        </tr>`).join('');
+      let debtSection = `
+        <div style="margin-top:14px;border:2px solid #1e3a8a;border-radius:8px;overflow:hidden;">
+          <div style="background:#1e3a8a;color:#fff;padding:8px 14px;font-size:11px;font-weight:800;letter-spacing:.5px;">QARZ HOLATI</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;padding:12px 0;">
+            <div><div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:4px;">OLDINGI QARZ</div><div style="font-size:16px;font-weight:900;color:#dc2626;">${inv.debtBefore.toLocaleString()} UZS</div></div>
+            <div style="border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0;">
+              <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:4px;">O'ZGARISH</div>
+              <div style="font-size:16px;font-weight:900;color:${inv.debtChange>=0?'#dc2626':'#16a34a'};">${inv.debtChange>=0?'+':''}${inv.debtChange.toLocaleString()} UZS</div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:4px;">JORIY QARZ</div>
+              <div style="font-size:18px;font-weight:900;color:${inv.debtAfter>0?'#dc2626':'#16a34a'};">${inv.debtAfter.toLocaleString()} UZS</div>
+            </div>
+          </div>
+        </div>`;
+      let win = window.open('','_blank','width=820,height=700');
+      win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Faktura ${docNum}</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:24px 30px;color:#111;font-size:13px;background:#fff;}
+        .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1e3a8a;}
+        .brand{font-size:22px;font-weight:900;color:#1e3a8a;letter-spacing:3px;}
+        .brand small{display:block;font-size:9px;color:#64748b;font-weight:500;letter-spacing:2px;margin-top:2px;}
+        .doc{text-align:right;font-size:11px;color:#64748b;line-height:1.7;}
+        .title-bar{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;text-align:center;padding:10px;border-radius:8px;font-size:15px;font-weight:800;letter-spacing:1px;margin-bottom:14px;}
+        .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+        .info-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;}
+        .info-card label{font-size:9px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+        .info-card span{display:block;font-size:13px;font-weight:700;color:#111;margin-top:2px;}
+        .section-title{font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px;}
+        table{width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+        thead tr{background:#1e3a8a;}
+        th{color:#fff;padding:8px 9px;font-size:10px;font-weight:700;text-align:left;}
+        td{padding:8px 9px;border-bottom:1px solid #f1f5f9;font-size:12px;vertical-align:middle;}
+        tr:nth-child(even) td{background:#f8fafc;}
+        .tfoot td{background:#1e3a8a!important;color:#fff;font-weight:800;font-size:13px;padding:9px;}
+        .transport-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+        .tcard{background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:8px 11px;}
+        .tcard label{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;}
+        .tcard span{display:block;font-size:12px;font-weight:700;margin-top:2px;}
+        .footer{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+        .sign{text-align:center;}
+        .sign-line{border-top:2px solid #1e3a8a;margin-top:30px;padding-top:5px;font-size:10px;color:#64748b;}
+        @media print{body{padding:12px 16px;}}
+      </style></head><body>
+      <div class="top">
+        <div class="brand">EURA COMPIL<small>FACTORY OS 2026</small></div>
+        <div class="doc"><b>${docNum}</b><br>Chop: ${today}<br>Sana: ${inv.date}</div>
+      </div>
+      <div class="title-bar">📦 TOVARLAR FAKTURASI / НАКЛАДНАЯ НА ТОВАРЫ</div>
+      <div class="info-grid">
+        <div class="info-card"><label>Diller / Mijoz</label><span>${inv.dillerName}</span></div>
+        <div class="info-card"><label>Telefon</label><span>${d.phone||'—'}</span></div>
+        <div class="info-card"><label>Manzil</label><span>${d.region||'—'}</span></div>
+        <div class="info-card"><label>To'lov turi</label><span>${inv.pay==='nasiya'?'📋 Nasiya':inv.pay==='plastik'?'💳 Plastik':'💵 Naqd'}</span></div>
+      </div>
+      <div class="section-title">📦 Tovarlar ro'yhati</div>
+      <table>
+        <thead><tr>
+          <th style="width:28px;">#</th>
+          <th>Tovar nomi</th>
+          <th style="width:70px;text-align:center;">Dona</th>
+          <th style="width:100px;text-align:right;">Narh/dona</th>
+          <th style="width:110px;text-align:right;">Jami (UZS)</th>
+        </tr></thead>
+        <tbody>${rowsHtml}</tbody>
+        <tfoot><tr>
+          <td class="tfoot" colspan="4" style="text-align:right;">TOVARLAR JAMI:</td>
+          <td class="tfoot" style="text-align:right;">${inv.goodsTotal.toLocaleString()} UZS</td>
+        </tr></tfoot>
+      </table>
+      ${inv.delivery.cost > 0 ? `
+      <div class="section-title">🚚 Dostavka ma'lumoti</div>
+      <div class="transport-grid">
+        <div class="tcard"><label>Transport raqami</label><span>${inv.delivery.transportNum||'—'}</span></div>
+        <div class="tcard"><label>Haydovchi tel</label><span>${inv.delivery.transportPhone||'—'}</span></div>
+        <div class="tcard"><label>Dostavka narhi</label><span style="color:${inv.delivery.payer==='biz'?'#16a34a':'#dc2626'};">${inv.delivery.cost.toLocaleString()} UZS (${inv.delivery.payer==='biz'?'Biz to\'laymiz':'Diller to\'laydi'})</span></div>
+      </div>` : ''}
+      ${inv.manager.name ? `
+      <div class="section-title">👤 Mas'ul menejer</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="tcard"><label>Menejer ismi</label><span>${inv.manager.name}</span></div>
+        <div class="tcard"><label>Menejer telefoni</label><span>${inv.manager.phone||'—'}</span></div>
+      </div>` : ''}
+      ${debtSection}
+      <div class="footer">
+        <div class="sign"><div class="sign-line">Yetkazib beruvchi ________________________<br><small>F.I.O · Imzo · Sana</small></div></div>
+        <div class="sign"><div class="sign-line">Qabul qiluvchi (Diller) ________________________<br><small>F.I.O · Imzo · Sana</small></div></div>
+      </div>
+      <script>window.onload=()=>{window.print();}<\/script>
+      </body></html>`);
+      win.document.close();
+  }
+
+  function renderMgrInvoicesList() {
+      let el = document.getElementById('mgr-invoices-list');
+      if(!el) return;
+      let invs = appState.mgrInvoices || [];
+      if(!invs.length) {
+          el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);"><i class="fa-solid fa-file-invoice" style="font-size:40px;opacity:.2;display:block;margin-bottom:10px;"></i>Hali faktura yo'q</div>`;
+          return;
+      }
+      el.innerHTML = invs.map((inv,i)=>`
+        <div style="border:1px solid var(--glass-border);border-radius:12px;margin-bottom:10px;overflow:hidden;">
+          <div style="display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:12px;padding:12px 16px;background:var(--glass-bg);cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+            <div style="font-size:11px;font-weight:800;color:#2563eb;">${inv.id}</div>
+            <div>
+              <div style="font-size:13px;font-weight:800;color:var(--text-main);">${inv.dillerName}</div>
+              <div style="font-size:11px;color:var(--text-muted);">${inv.date} · ${inv.items.length} xil tovar · ${inv.goodsTotal.toLocaleString()} UZS</div>
+            </div>
+            <span style="padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700;background:${inv.pay==='nasiya'?'rgba(239,68,68,.1)':inv.pay==='plastik'?'rgba(37,99,235,.1)':'rgba(22,163,74,.1)'};color:${inv.pay==='nasiya'?'#dc2626':inv.pay==='plastik'?'#2563eb':'#16a34a'};">${inv.pay==='nasiya'?'Nasiya':inv.pay==='plastik'?'Plastik':'Naqd'}</span>
+            <button onclick="event.stopPropagation();printMgrInvoice(appState.mgrInvoices[${i}])" style="padding:5px 12px;border:none;border-radius:7px;background:#2563eb;color:#fff;font-size:11px;font-weight:700;cursor:pointer;"><i class="fa-solid fa-print"></i> Chop</button>
+          </div>
+          <div style="display:none;padding:12px 16px;border-top:1px solid var(--glass-border);font-size:12px;">
+            ${inv.items.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+              ${r.img?`<img src="${r.img}" style="width:26px;height:26px;object-fit:contain;border-radius:4px;">`:''}
+              <span style="flex:1;">${r.name} <span style="color:var(--text-muted);">${r.pack}</span></span>
+              <b>${r.qty} dona</b><span style="color:#2563eb;margin-left:8px;">${r.total.toLocaleString()} UZS</span>
+            </div>`).join('')}
+            ${inv.delivery.cost>0?`<div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--glass-border);color:var(--text-muted);font-size:11px;">🚚 Dostavka: ${inv.delivery.cost.toLocaleString()} UZS · ${inv.delivery.transportNum||''} · ${inv.delivery.payer==='biz'?'Biz to\'laymiz':'Diller to\'laydi'}</div>`:''}
+            <div style="margin-top:8px;padding:8px;background:rgba(220,38,38,.05);border-radius:7px;font-size:11px;">
+              Oldingi qarz: <b>${inv.debtBefore.toLocaleString()}</b> → O'zgarish: <b style="color:${inv.debtChange>=0?'#dc2626':'#16a34a'};">${inv.debtChange>=0?'+':''}${inv.debtChange.toLocaleString()}</b> → Joriy qarz: <b style="color:${inv.debtAfter>0?'#dc2626':'#16a34a'};">${inv.debtAfter.toLocaleString()} UZS</b>
+            </div>
+          </div>
+        </div>`).join('');
+  }
+
+  // Eski funksiya — backward compat
+  function makeMgrSale() { submitMgrInvoice(); }
 
   function renderMgrSalesHistory() {
       let el = document.getElementById('mgr-sales-body');
@@ -4497,8 +5650,13 @@
       el.innerHTML = appState.managerSales.length
           ? [...appState.managerSales].reverse().map(s => `<tr>
               <td style="padding:7px 10px;font-size:12px;">${s.date}</td>
-              <td style="padding:7px 10px;font-size:12px;font-weight:700;">${s.diller}</td>
-              <td style="padding:7px 10px;font-size:12px;">${s.name}</td>
+              <td style="padding:7px 10px;font-size:12px;font-weight:700;">${s.diller||s.dillerName||'—'}</td>
+              <td style="padding:7px 10px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  ${s.img ? `<img src="${s.img}" style="width:32px;height:32px;object-fit:contain;border-radius:5px;border:1px solid var(--glass-border);flex-shrink:0;">` : ''}
+                  <span style="font-size:12px;">${s.name||s.itemName||'—'}</span>
+                </div>
+              </td>
               <td style="padding:7px 10px;text-align:right;font-weight:900;color:#a855f7;">${s.qty}</td>
               <td style="padding:7px 10px;text-align:right;font-size:12px;">${s.total.toLocaleString()} UZS</td>
               <td style="padding:7px 10px;font-size:11px;color:${s.pay==='nasiya'?'#ef4444':'#10b981'};font-weight:700;">${s.pay==='nasiya'?'Nasiya':s.pay==='plastik'?'Plastik':'Naqd'}</td>
@@ -4634,7 +5792,7 @@
           let profiles = btn.getAttribute('data-profiles') || '';
           if(!profiles.includes(p)) return;
           let label = btn.getAttribute('data-label') || '';
-          let shortLabel = label.split(' ')[0]; // first word only
+          let shortLabel = label.split(' ')[0].replace(/'/g, '').substring(0, 8);
           let onclick = btn.getAttribute('onclick') || '';
           let iconEl = btn.querySelector('i');
           let iconClass = iconEl ? iconEl.className : 'fa-solid fa-circle';
@@ -4694,6 +5852,21 @@
           // (profil tanlanganidan keyin enterProfile ichida chaqiriladi)
       } catch(e) { console.warn('Load error:', e); }
   });
+
+  // Scroll fix: force .content to scroll on mouse wheel everywhere
+  document.addEventListener('wheel', function(e) {
+      let scroller = document.querySelector('.main-container');
+      if(!scroller) return;
+      let el = e.target;
+      while(el && el !== document.body) {
+          if(el === scroller) return; // natural scroll
+          let style = window.getComputedStyle(el);
+          let oy = style.overflowY;
+          if((oy === 'scroll' || oy === 'auto') && el.scrollHeight > el.clientHeight + 1) return;
+          el = el.parentElement;
+      }
+      scroller.scrollTop += e.deltaY;
+  }, { passive: true });
 </script>
 </body>
 </html>
