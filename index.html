@@ -485,6 +485,72 @@
           .modal { position: absolute; background: white; display: flex; box-shadow: none; backdrop-filter: none; top: 0; left: 0; }
           .modal-content { border: none; width: 100%; max-width: 100%; padding: 0; }
       }
+
+      /* ============ MOBILE APP MODE ============ */
+      body.mobile-mode .sidebar { display: none !important; }
+      body.mobile-mode .layout { flex-direction: column; }
+      body.mobile-mode .content { padding: 12px 14px 90px; }
+      body.mobile-mode .top-bar { height: 56px; padding: 0 14px; }
+      body.mobile-mode .top-bar h3 { font-size: 15px; }
+      body.mobile-mode .status-badge { display: none; }
+
+      #mobile-nav {
+          display: none;
+          position: fixed;
+          bottom: 0; left: 0; right: 0;
+          height: 68px;
+          z-index: 600;
+          align-items: center;
+          justify-content: space-around;
+          padding: 0 4px 4px;
+          box-shadow: 0 -2px 24px rgba(0,0,0,0.10);
+          background: var(--glass-bg);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-top: 1px solid var(--glass-border);
+      }
+      body.mobile-mode #mobile-nav { display: flex; }
+
+      .mobile-nav-btn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          flex: 1;
+          height: 60px;
+          border: none;
+          background: transparent;
+          color: var(--text-muted);
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 9px;
+          font-weight: 700;
+          border-radius: 12px;
+          letter-spacing: 0.3px;
+          padding: 0 2px;
+      }
+      .mobile-nav-btn i { font-size: 19px; transition: transform 0.2s; }
+      .mobile-nav-btn.active { color: var(--primary); }
+      .mobile-nav-btn.active i { transform: scale(1.15); }
+      .mobile-nav-btn:hover { color: var(--primary); background: rgba(14,165,233,0.08); }
+      .mobile-nav-divider { width: 1px; height: 32px; background: var(--glass-border); flex-shrink: 0; }
+
+      /* View mode toggle button in topbar */
+      .view-mode-btn {
+          display: flex; align-items: center; gap: 6px;
+          padding: 6px 13px;
+          border-radius: 20px;
+          border: 1.5px solid var(--glass-border);
+          background: var(--glass-bg);
+          color: var(--text-main);
+          font-size: 12px; font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+      }
+      .view-mode-btn:hover { border-color: var(--primary); color: var(--primary); }
+      body.mobile-mode .view-mode-btn { border-color: rgba(14,165,233,0.4); color: var(--primary); background: rgba(14,165,233,0.08); }
     /* ===== LOGIN OVERLAY ===== */
   #login-overlay {
       position:fixed;inset:0;z-index:9999;
@@ -753,6 +819,10 @@
       <div class="top-bar glass">
           <h3 id="page-title">Ombor Qoldiqlari va Joriy Holat</h3>
           <div style="display:flex;align-items:center;gap:10px;">
+              <button class="view-mode-btn" onclick="toggleViewMode()" id="view-mode-btn">
+                  <i class="fa-solid fa-mobile-screen" id="view-mode-icon"></i>
+                  <span id="view-mode-label">Mobil</span>
+              </button>
               <div id="profile-topbar-badge" style="display:none;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);"></div>
               <div class="status-badge">Tizim: Online</div>
           </div>
@@ -1675,6 +1745,10 @@
 
   </div>
   </div>
+
+  <!-- ===== MOBILE BOTTOM NAV ===== -->
+  <div id="mobile-nav"></div>
+
 </div>
 
 <!-- INVOICE MODAL -->
@@ -1879,6 +1953,9 @@
           'mgr-report': 'Menejer Hisoboti'
       }, titles);
       if(allTitles[viewId]) document.getElementById('page-title').innerText = allTitles[viewId];
+      let contentEl = document.querySelector('.content');
+      if(contentEl) contentEl.scrollTop = 0;
+      syncMobileNav(viewId);
       if(['warehouse','production','procurement','sales','sarflash'].includes(viewId)) renderAll();
       if(viewId === 'analytics') renderAnalytics();
       if(['shop-warehouse','shop-sales','shop-report'].includes(viewId)) renderShopViews();
@@ -3834,6 +3911,8 @@
       badge.style.borderColor = PROFILE_COLORS[p] + '55';
       badge.style.color = PROFILE_COLORS[p];
       badge.innerHTML = PROFILE_LABELS[p];
+      // Mobile nav rebuild for new profile
+      if(document.body.classList.contains('mobile-mode')) buildMobileNav();
       // Birinchi menyuga o'tish
       if(p === 'factory') { renderAll(); switchView('warehouse'); }
       else if(p === 'shop') { switchView('shop-warehouse'); renderShopViews(); }
@@ -4523,9 +4602,87 @@
       </div>`).join('');
   }
 
+  /* ===== MOBILE / DESKTOP VIEW MODE ===== */
+  function toggleViewMode() {
+      let isMobile = document.body.classList.toggle('mobile-mode');
+      updateViewModeBtn(isMobile);
+      if(isMobile) buildMobileNav();
+      localStorage.setItem('euraViewMode', isMobile ? 'mobile' : 'desktop');
+  }
+
+  function updateViewModeBtn(isMobile) {
+      let icon = document.getElementById('view-mode-icon');
+      let label = document.getElementById('view-mode-label');
+      if(!icon || !label) return;
+      if(isMobile) {
+          icon.className = 'fa-solid fa-desktop';
+          label.textContent = 'Desktop';
+      } else {
+          icon.className = 'fa-solid fa-mobile-screen';
+          label.textContent = 'Mobil';
+      }
+  }
+
+  function buildMobileNav() {
+      let nav = document.getElementById('mobile-nav');
+      if(!nav) return;
+      let p = appState.currentProfile;
+      nav.innerHTML = '';
+
+      // Profile menu buttons
+      document.querySelectorAll('#sidebar-menu .menu-btn').forEach(btn => {
+          let profiles = btn.getAttribute('data-profiles') || '';
+          if(!profiles.includes(p)) return;
+          let label = btn.getAttribute('data-label') || '';
+          let shortLabel = label.split(' ')[0]; // first word only
+          let onclick = btn.getAttribute('onclick') || '';
+          let iconEl = btn.querySelector('i');
+          let iconClass = iconEl ? iconEl.className : 'fa-solid fa-circle';
+          let isActive = btn.classList.contains('active');
+          let navBtn = document.createElement('button');
+          navBtn.className = 'mobile-nav-btn' + (isActive ? ' active' : '');
+          navBtn.setAttribute('data-mobile-view', onclick.replace(/switchView\('(.+)'\)/, '$1'));
+          navBtn.setAttribute('onclick', onclick);
+          navBtn.innerHTML = `<i class="${iconClass}"></i><span>${shortLabel}</span>`;
+          nav.appendChild(navBtn);
+      });
+
+      // Divider
+      let div = document.createElement('div');
+      div.className = 'mobile-nav-divider';
+      nav.appendChild(div);
+
+      // Theme toggle
+      let themeBtn = document.createElement('button');
+      themeBtn.className = 'mobile-nav-btn';
+      themeBtn.setAttribute('onclick', 'toggleTheme()');
+      themeBtn.innerHTML = `<i class="fa-solid fa-circle-half-stroke"></i><span>Tema</span>`;
+      nav.appendChild(themeBtn);
+
+      // Logout
+      let logoutBtn = document.createElement('button');
+      logoutBtn.className = 'mobile-nav-btn';
+      logoutBtn.setAttribute('onclick', 'logoutProfile()');
+      logoutBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i><span>Chiqish</span>`;
+      nav.appendChild(logoutBtn);
+  }
+
+  function syncMobileNav(viewId) {
+      document.querySelectorAll('#mobile-nav .mobile-nav-btn').forEach(btn => {
+          let v = btn.getAttribute('data-mobile-view');
+          btn.classList.toggle('active', v === viewId);
+      });
+  }
+
   window.addEventListener('load', () => {
       try {
           loadState();
+          // Restore view mode preference
+          let savedMode = localStorage.getItem('euraViewMode');
+          if(savedMode === 'mobile') {
+              document.body.classList.add('mobile-mode');
+              updateViewModeBtn(true);
+          }
           let today = new Date();
           let firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
           let todayStr = today.toISOString().split('T')[0];
