@@ -615,8 +615,17 @@
           /* Ombor cards grid */
           .ombor-cards-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
 
-          /* Fin cards */
-          .fin-card { min-width: unset; }
+          /* Fin cards — compact on mobile */
+          .fin-card { min-width: unset; padding: 12px 10px !important; }
+          .fin-card img, .fin-card-icon { height: 80px !important; }
+          .fin-card-name { font-size: 13px !important; }
+          .fin-card-qty { font-size: 17px !important; }
+
+          /* Warehouse action bar — stack on mobile */
+          .ombor-action-bar { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
+          .ombor-action-bar .view-toggle { margin-bottom: 0 !important; }
+          .ombor-action-bar > div:last-child { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; }
+          .ombor-action-bar button { font-size: 11px !important; padding: 7px 12px !important; flex: 1 !important; justify-content: center !important; min-width: 0 !important; }
 
           /* Stats/summary cards */
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
@@ -666,6 +675,21 @@
       body.mobile-mode table { min-width: 480px; }
       body.mobile-mode .glass-card { border-radius: 12px; padding: 12px !important; margin-bottom: 10px !important; }
       body.mobile-mode .panel { padding: 14px; }
+
+      /* Mobile ombor action bar */
+      body.mobile-mode .ombor-action-bar { flex-direction: column !important; align-items: stretch !important; }
+      body.mobile-mode .ombor-action-bar > div:last-child > button { flex: 1 !important; min-width: 0 !important; font-size: 11px !important; }
+      /* Mobile fin-cards compact */
+      body.mobile-mode .fin-card { padding: 10px 8px !important; gap: 5px !important; }
+      body.mobile-mode .fin-card img { height: 75px !important; }
+      body.mobile-mode .fin-card-icon { height: 75px !important; font-size: 32px !important; }
+      body.mobile-mode .fin-card-name { font-size: 12px !important; }
+      body.mobile-mode .fin-card-qty { font-size: 16px !important; }
+      body.mobile-mode .fin-card-pack { font-size: 10px !important; }
+      body.mobile-mode .ombor-cards-grid { grid-template-columns: repeat(2,1fr) !important; gap: 8px !important; }
+      /* Mobile tabs compact */
+      body.mobile-mode .tabs { gap: 5px !important; padding-bottom: 6px !important; }
+      body.mobile-mode .tab-btn { padding: 7px 12px !important; font-size: 11px !important; }
 
       #mobile-nav {
           display: none;
@@ -1090,7 +1114,7 @@
                   <button class="tab-btn" onclick="switchTab('vizual-xarita', this); renderVizualXarita();"><i class="fa-solid fa-map"></i> Vizual Xarita</button>
               </div>
               <div id="raw-materials" class="tab-content active">
-                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                  <div class="ombor-action-bar" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
                       <div class="view-toggle" style="margin-bottom:0;">
                           <button class="view-toggle-btn active" id="raw-toggle-cards" onclick="setOmborView('raw','cards')"><i class="fa-solid fa-grip"></i> Tablitsa</button>
                           <button class="view-toggle-btn" id="raw-toggle-table" onclick="setOmborView('raw','table')"><i class="fa-solid fa-table-list"></i> Spisok</button>
@@ -1126,7 +1150,7 @@
                   </div>
               </div>
               <div id="finished-goods" class="tab-content">
-                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                  <div class="ombor-action-bar" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
                       <div class="view-toggle" style="margin-bottom:0;">
                           <button class="view-toggle-btn active" id="fin-toggle-cards" onclick="setOmborView('fin','cards')"><i class="fa-solid fa-grip"></i> Tablitsa</button>
                           <button class="view-toggle-btn" id="fin-toggle-table" onclick="setOmborView('fin','table')"><i class="fa-solid fa-table-list"></i> Spisok</button>
@@ -4580,7 +4604,15 @@
               groups[key].batches++;
               if(!groups[key].img && item.img) groups[key].img = item.img;
           });
-          rawCards.innerHTML = Object.values(groups).filter(g => g.totalQty > 0).map(g => {
+          let rawFiltered = Object.values(groups).filter(g => g.totalQty > 0);
+          if(rawFiltered.length === 0) {
+              rawCards.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted);">
+                  <div style="font-size:40px;margin-bottom:12px;">📦</div>
+                  <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Ombor bo'sh</div>
+                  <div style="font-size:12px;">Xomashyo yoki tara qoldig'i mavjud emas</div>
+              </div>`;
+          } else {
+          rawCards.innerHTML = rawFiltered.map(g => {
               let avgPrice = g.totalQty > 0 ? Math.round(g.weightedSum / g.totalQty) : 0;
               let stockBadge, badgeCls;
               if(g.totalQty < 50) { stockBadge = "Kam Qoldiq"; badgeCls = "low-stock"; }
@@ -4596,6 +4628,7 @@
                   <div class="fin-card-qty">${g.totalQty} <span style="font-size:14px;font-weight:600;color:var(--text-muted);">${g.bir_tur}</span></div>
               </div>`;
           }).join('');
+          }
       }
       // Tayyor mahsulotlar — SPISOK ko'rinishi (kichkina rasm bilan)
       let finListBody = document.getElementById('fin-list-body');
@@ -4612,10 +4645,17 @@
       // Tayyor mahsulotlar — TABLITSA ko'rinishi (rasm bilan kartochka)
       let finCards = document.getElementById('fin-cards-container');
       if(finCards) {
-          finCards.innerHTML = appState.shampunlarSkladi.filter(item => item.qty > 0).map(item => {
+          let finFiltered = appState.shampunlarSkladi.filter(item => item.qty > 0);
+          if(finFiltered.length === 0) {
+              finCards.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted);">
+                  <div style="font-size:40px;margin-bottom:12px;">🧴</div>
+                  <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Tayyor mahsulot yo'q</div>
+                  <div style="font-size:12px;">Skladdagi tayyor mahsulot qoldig'i mavjud emas</div>
+              </div>`;
+          } else {
+          finCards.innerHTML = finFiltered.map(item => {
               let stockBadge, badgeCls;
-              if(item.qty === 0) { stockBadge = "Tugagan"; badgeCls = "out-stock"; }
-              else if(item.qty < 15) { stockBadge = "Kam Qoldiq"; badgeCls = "low-stock"; }
+              if(item.qty < 15) { stockBadge = "Kam Qoldiq"; badgeCls = "low-stock"; }
               else { stockBadge = "Mavjud"; badgeCls = "in-stock"; }
               let brand = _rBrandMap.get(item.name);
               let imgHtml = (brand && brand.img)
@@ -4629,6 +4669,7 @@
                   <div class="fin-card-qty">${item.qty} <span style="font-size:14px; font-weight:600; color:var(--text-muted);">dona</span></div>
               </div>`;
           }).join('');
+          }
       }
       document.getElementById('prod-select').innerHTML = appState.shampunTurlari.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
       let pBody = document.getElementById('partners-body'); if(pBody) pBody.innerHTML = appState.partners.map(p => `<tr><td><b>${p.name}</b></td><td>${p.phone}</td></tr>`).join('');
